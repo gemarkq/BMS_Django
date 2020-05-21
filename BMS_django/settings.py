@@ -87,6 +87,8 @@ DATABASES = {
     }
 }
 
+# user model change
+AUTH_USER_MODEL = 'BMS.readers'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

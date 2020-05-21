@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>registerAdmin</title>
+</head>
+<body>
+    <h2>registerAdmin</h2>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.gh.label }}
+        {{ form.gh }}
+
+        {{ form.xm.label }}
+        {{ form.xm }}
+
+        {{ form.password1.label }}
+        {{ form.password1 }}
+
+        {{ form.password2.label }}
+        {{ form.password2 }}
+        <input type="submit">
+    </form>
+
+</body>
+</html>
