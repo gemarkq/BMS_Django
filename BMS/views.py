@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CreateUserForm, CreateAdminForm
+from .forms import CreateUserForm, CreateAdminForm, loginForm
 from .models import readers, bms_admin
 from hashlib import sha1
 
 # Create your views here.
+
+def mainPage(request):
+    return render(request, 'BMS/mainpage.html')
+
 def registerPage(request):
     form = CreateUserForm()
 
@@ -15,7 +19,7 @@ def registerPage(request):
             print('**')
             print(form.data)
             print(form.data['readerId'])
-            # form.save()
+            form.save()
         else:
             print('error')
 
@@ -45,5 +49,6 @@ def registerAdmin(request):
         return render(request, 'BMS/registerAdmin.html',context)
 
 def loginPage(request):
-    context = {}
-    return render(request, 'BMS/Login.html')
+    form = loginForm
+    context = {'form':form}
+    return render(request, 'BMS/Login.html',context)

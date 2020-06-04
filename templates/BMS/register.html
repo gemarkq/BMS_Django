@@ -1,4 +1,12 @@
 {% extends 'BMS/main.html' %}
+
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="{% static '/css/register.css' %}"/>
+{% endblock %}
+
+
 {% block title %}
     读者注册
 {% endblock %}
@@ -52,7 +60,7 @@
 							</div>
 							{{ form.password2 }}
 						</div>
-
+                        {{ form.errors }}
 				   		<div class="d-flex justify-content-center mt-3 login_container">
 				 			<input class="btn login_btn" type="submit" value="注册">
 				   		</div>

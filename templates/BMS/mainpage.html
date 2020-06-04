@@ -1,0 +1,87 @@
+{%  extends 'BMS/main.html' %}
+
+{% block content %}
+
+<br>
+
+<div class="row">
+	<div class="col">
+		<div class="col-md">
+			<div class="card text-center text-white  mb-3" id="total-orders">
+			  	<div class="card-header">
+			  		<h5 class="card-title">在库数量</h5>
+			  	</div>
+			  	<div class="card-body">
+			    	<h3 class="card-title">100</h3>
+			  	</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col">
+		<div class="col-md">
+			<div class="card text-center text-white  mb-3" id="orders-delivered">
+			  	<div class="card-header">
+			  		<h5 class="card-title">借出数量</h5>
+			  	</div>
+			  	<div class="card-body">
+			    	<h3 class="card-title">0</h3>
+			  	</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col">
+		<div class="col-md">
+			<div class="card text-center text-white  mb-3" id="orders-pending">
+			  	<div class="card-header">
+			  		<h5 class="card-title">预约</h5>
+			  	</div>
+			  	<div class="card-body">
+			    	<h3 class="card-title">0</h3>
+			  	</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<br>
+
+<div class="row">
+	<div class="col-md-5">
+		<h4>读者:</h4>
+		<hr>
+		<div class="card card-body">
+			<a class="btn btn-primary  btn-sm btn-block" href="">注册读者</a>
+			<table class="table table-sm">
+				<tr>
+					<th></th>
+					<th>读者号ID</th>
+					<th>借阅记录</th>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+
+	<div class="col-md-7">
+		<h4>最新借阅记录</h4>
+		<hr>
+		<div class="card card-body">
+			<a class="btn btn-primary  btn-sm btn-block" href="">发起借书</a>
+			<table class="table table-sm">
+				<tr>
+					<th>Product</th>
+					<th>Date Orderd</th>
+					<th>Status</th>
+					<th>Update</th>
+					<th>Remove</th>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}

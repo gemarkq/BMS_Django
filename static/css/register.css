@@ -2,13 +2,13 @@ body,
 html {
     margin: 0;
     padding: 0;
-    height: 90%;
-    /*background: #7abecc !important;*/
+    height: 100%;
+    background: #7abecc !important;
 }
 
 .user_card {
     width: 350px;
-    margin-top: auto;
+    margin-top: 50px;
     margin-bottom: auto;
     background: #3f3e40;
     position: relative;
@@ -16,6 +16,7 @@ html {
     justify-content: center;
     flex-direction: column;
     padding: 10px;
+    opacity: 0.95;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);

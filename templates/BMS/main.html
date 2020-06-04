@@ -10,10 +10,36 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
           integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
-{#    <link rel="stylesheet" type="text/css" href="{% static '/css/login.css' %}"/>#}
-    <link rel="stylesheet" type="text/css" href="{% static '/css/register.css' %}">
+
+    {% block link %} {% endblock %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <title>{% block title %} {% endblock %}</title>
+
+    <style>
+
+		#logo{
+		}
+
+		body{
+			background-color: #ebeff5;
+		}
+
+
+		#total-orders{
+			background-color: #4cb4c7;
+		}
+
+
+		#orders-delivered{
+			background-color: #7abecc;
+		}
+
+		#orders-pending{
+			background-color: #7CD1C0;
+		}
+
+	</style>
+
 </head>
 <body>
 {% include 'BMS/navbar.html' %}
