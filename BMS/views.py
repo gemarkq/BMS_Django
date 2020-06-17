@@ -84,9 +84,13 @@ def navbar(request):
     return render(request, 'BMS/navbar.html')
 
 def borrow(request):
-    form = addBooksForm()
+    form = borrowForm()
     if request.method == 'POST':
         print('form=', request.POST)
-        form = buildbookForm(request.POST)
+        form = borrowForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        print('error=', form.errors)
     context = {'form': form}
     return render(request, 'BMS/borrow.html', context)

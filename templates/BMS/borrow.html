@@ -31,17 +31,19 @@
 			<div class="col-md-12">
 				<div class="row">
 					<div class="col-sm-3" style="margin-top:1rem">
-						<form action="#" method="post">
+						<form action="#" method="post">{% csrf_token %}
                             <h5>图书ID</h5>
-								<p>{{ books.ID }}</p>
+								{{ form.bookId }}
 							<h5>借书日期</h5>
-								<input type="text" name="borrowTime" id="borrowTime" class="form-control"></input> 
+								{{ form.borrowTime }}
+								<!--<input type="text" name="borrowTime" id="borrowTime" class="form-control"></input> -->
 							<h5>还书日期</h5>
-                                <input type="text" name="returnTime" id="returnTime" class="form-control"></input> 
+								{{ form.returnTime }}
+                                <!--<input type="text" name="returnTime" id="returnTime" class="form-control"></input> -->
                             <h5>读者ID</h5>
-                                <input type="text" name="readerId_id" id="readerId_id" class="form-control"></input> 
-                            <br/>
-                            <input type="hidden" name="bookId_id" value={{ books.Id }} />
+								{{form.readerId}}
+                                <!--<input type="text" name="readerId_id" id="readerId_id" class="form-control"></input>-->
+                            <!--<input type="hidden" name="bookId_id" value={{ books.Id }} />-->
                             <input type="submit" class="btn btn-primary btn-wide login-btn" value="确认借阅" />
 						</form>
 					</div>
