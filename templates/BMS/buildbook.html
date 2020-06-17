@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head><script type="text/javascript" src="{% static 'utils/scripts/flat-ui.js' %}"></script><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><link rel="shortcut icon" href="{% static 'utils/image/favicon.ico' %}" type="image/x-icon" />
+		<meta charset="UTF-8">
+		<title>图书管理系统</title>
+		<script type="text/javascript" src="{% static 'utils/js/jquery-3.3.1.min.js' %}"></script>
+		<!-- Loading Bootstrap -->
+		<link href="{% static 'utils/css/vendor/bootstrap.min.css' %}" rel="stylesheet">
+		<!-- Loading Flat UI Pro -->
+		<link href="{% static 'utils/css/flat-ui.css' %}" rel="stylesheet">
+		<!-- Loading animate -->
+		<link href="{% static 'utils/css/animate.css' %}" rel="stylesheet">
+	<script type='text/javascript' src="{% static 'utils/scripts/particles.js' %}"></script><link href="{% static 'utils/css/animate.css' %}" rel="stylesheet"></head>
+
+	<div class="container">
+		{% include 'BMS/navbar.html' %}
+		<div class="row">
+			<div class="col-md-6">
+				<h5>建立书目</h5>
+				<form action="#" method="post">{% csrf_token %}
+					<h6>ISBN</h6>
+						{{form.ISBN}}
+						<!--<input type="text" name="ISBN" id="ISBN" class="form-control" ></input>-->
+					<h6>书名</h6>
+						{{form.bookName}}
+						<!--<input type="text" name="bookName" id="bookName" class="form-control" ></input>-->
+					<h6>作者</h6>
+						{{form.author}}
+						<!--<input type="text" name="author" id="author" class="form-control" ></input>-->
+					<input type="submit" value="添加" class="btn btn-primary btn-wide login-btn" style="margin-top:2rem"/>
+
+
+				</form>
+
+			</div>
+		</div>	
+	</div>
+	<script type="text/javascript" src="{% static 'utils/scripts/flat-ui.js' %}"></script><script src="{% static 'utils/scripts/bganimation.js' %}"></script></body>
+</html>

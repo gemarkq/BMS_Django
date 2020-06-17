@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="{% static 'utils/scripts/flat-ui.js' %}"></script>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="shortcut icon" href="{% static 'utils/image/favicon.ico' %}"
+	type="image/x-icon" />
+<meta charset="UTF-8">
+<title>图书管理系统</title>
+
+<!-- 标题图标、CSS、js、jQ -->
+<script type="text/javascript" src="{% static 'utils/js/jquery-3.3.1.min.js' %}"></script>
+<!-- Loading Bootstrap -->
+<link href="{% static 'utils/css/vendor/bootstrap.min.css' %}" rel="stylesheet">
+<!-- Loading Flat UI Pro -->
+<link href="{% static 'utils/css/flat-ui.css' %}" rel="stylesheet">
+<!-- Loading Flat UI JS -->
+<script type="text/javascript" src="{% static 'utils/scripts/flat-ui.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'utils/scripts/particles.js' &}"></script><link href="{% static 'utils/css/animate.css' %}" rel="stylesheet"></head>
+
+<body>
+    {% include 'navbar.html' %}  
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-12" >
+						<div class="margin:0 15px" style="overflow-x: scroll;">
+						<table
+							class="table table-striped table-hover animated fadeIn">
+
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>ISBN</th>
+									<th>位置</th>
+									<th>借书办理</th>
+								</tr>
+							</thead>
+							{% for book in books %}
+								<tr>
+									<td>{{ book.ID }}</td>
+									<td>{{ book.ISBN_id }}</td>
+									<td>{{book.position}}</td>
+                                    <td><a class="btn btn-default"
+                                        href="#"> 借书
+                                    </a></td>
+								</tr>
+                            {% endfor %}
+						</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div class="row">
+            <!--分页文字信息  -->
+            <div class="col-md-6">当前 {{pageInfo.pageNum }}页,总{{pageInfo.pages }}
+                页,总{{pageInfo.total }} 条记录</div>
+            <!-- 分页条信息 -->
+            <div class="col-md-6">
+                <nav aria-label="Page navigation">
+                <ul class="pagination bg-primary">
+                    <li><a href="#">首页</a></li>
+                    {% for page_Num in pageInfo.pages %}
+                        {% if {{page_Num}} == {{pageInfo.pageNum}} %}
+                            <li class="active"><a href="#">{{page_Num }}</a></li>
+                        {% else %}
+                            <li><a href="#">{{ page_Num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    <li><a href="#">末页</a></li>
+                </ul>
+                </nav>
+            </div>
+        </div>
+	
+		
+	</div>
+
+
+	<script>
+		$("select").select2({
+			dropdownCssClass : 'dropdown-inverse'
+		});
+	</script>
+	<script type="text/javascript" src="{% static 'utils/scripts/flat-ui.js' %}"></script>
+<script src="{% static 'utils/scripts/bganimation.js' %}"></script></body>
+</html>

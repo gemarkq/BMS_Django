@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CreateUserForm, CreateAdminForm, loginForm
+from .forms import *
 from .models import readers, bms_admin
 from hashlib import sha1
-
+from django.contrib import messages
 # Create your views here.
 
 def mainPage(request):
@@ -52,3 +52,41 @@ def loginPage(request):
     form = loginForm
     context = {'form':form}
     return render(request, 'BMS/Login.html',context)
+
+def addBooks(request):
+    form = addBooksForm()
+    if request.method == 'POST':
+        print('form=', request.POST)
+        form = addBooksForm(request.POST)
+        if form.is_valid():
+            form.save()
+            #messages.success(request, "成功录入")
+        else:
+            print('error=', form.errors)
+    context = {'form': form}
+    return render(request, 'BMS/addBooks.html', context)
+
+def buildBooks(request):
+    form = buildbookForm()
+    if request.method == 'POST':
+        print('form=', request.POST)
+        form = buildbookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            #messages.success(request, "成功录入")
+        else:
+            print('error=', form.errors)
+            #messages.warning(request, "录入失败")
+    context = {'form': form}
+    return render(request, 'BMS/buildbook.html', context)
+
+def navbar(request):
+    return render(request, 'BMS/navbar.html')
+
+def borrow(request):
+    form = addBooksForm()
+    if request.method == 'POST':
+        print('form=', request.POST)
+        form = buildbookForm(request.POST)
+    context = {'form': form}
+    return render(request, 'BMS/borrow.html', context)

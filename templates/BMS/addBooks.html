@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head><script type="text/javascript" src="{% static 'utils/scripts/flat-ui.js' %}"></script><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><link rel="shortcut icon" href="{% static 'utils/image/favicon.ico' %}" type="image/x-icon" />
+		<meta charset="UTF-8">
+		<title>图书管理系统</title>
+		<script type="text/javascript" src="{% static 'utils/js/jquery-3.3.1.min.js' %"></script>
+		<!-- Loading Bootstrap -->
+		<link href="{% static 'utils/css/vendor/bootstrap.min.css' %}" rel="stylesheet">
+		<!-- Loading Flat UI Pro -->
+		<link href="{% static 'utils/css/flat-ui.css' %}" rel="stylesheet">
+		<!-- Loading animate -->
+		<link href="{% static 'utils/css/animate.css' %}" rel="stylesheet">
+	<script type='text/javascript' src="{% static 'utils/scripts/particles.js' %}"></script><link href="{% static 'utils/css/animate.css' %}" rel="stylesheet"></head>
+	{% include 'BMS/navbar.html' %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>图书录入</h5>
+				        <form action="#" method="post">{% csrf_token %}
+                            <h6>图书ID</h6>
+                                {{form.ID}}
+						        <!--<input type="text" name="ID" id="ID" class="form-control" ></input>-->
+					        <h6>位置</h6>
+                                {{form.position}}
+						        <!--<input type="text" name="position" id="position" class="form-control" ></input>-->
+					        <h6>状态</h6>
+                                {{form.status}}
+					        	<!--<input type="text" name="status" id="status" class="form-control" ></input>-->
+                            <h6>ISBN_id</h6>
+                                {{form.ISBN}}
+                            <br> <input type="submit" value="录入"
+                                class="btn btn-primary btn-wide login-btn" />
+                        </form>
+                        <p>未找到?<a href="/buildbook">建立书目</a></p>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $("select").select2({
+                    dropdownCssClass : 'dropdown-inverse'
+                });
+            </script>
+            <script type="text/javascript" src="{% static 'utils/scripts/flat-ui.js' %}"></script><script src="{% static 'utils/scripts/bganimation.js' %}"></script></body>
+        </html>
