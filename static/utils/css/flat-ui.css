@@ -4373,7 +4373,6 @@ fieldset[disabled] .input-group-btn .btn-default.active {
   min-height: 53px;
   margin-bottom: 30px;
   border: none;
-  border-radius: 6px;
 }
 
 @media (min-width: 992px) {

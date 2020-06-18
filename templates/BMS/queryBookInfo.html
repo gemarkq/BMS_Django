@@ -19,13 +19,36 @@
 <!-- Loading Flat UI JS -->
 <script type="text/javascript" src="{% static 'utils/scripts/flat-ui.min.js' %}"></script>
 <script type='text/javascript' src="{% static 'utils/scripts/particles.js' %}"></script>
-    <link href="{% static 'utils/css/animate.css' %}" rel="stylesheet">
-</head>
+    <link href="{% static 'utils/css/animate.css' %}" rel="stylesheet"></head>
 
 <body>
     {% include 'BMS/navbar.html' %}
 	<div class="container">
 		<div class="row">
+			<div class="col-md-12">
+			<h5>图书查询</h5>
+				<form name="bookQuery" action="#" method="get">
+					<div class="row">
+						<div class="col-md-4">
+							<strong>查询条件<br></strong> <select name="serc"
+								class="form-control select select-primary select-block mbl">
+								<option value="all">全部图书</option>
+								<option value="sid">按ISBN查询</option>
+							</select>
+						</div>
+						<div class="col-md-4">
+							<strong>条件</strong>
+							<div class="form-group has-feedback">
+								<input type="text" name="condition" placeholder="输入值"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="col-md-3 pos">
+							<br> <input type="submit" class="btn btn-primary" value="查询" />
+						</div>
+					</div>
+				</form>
+			</div>
 			<div class="col-md-12">
 				<div class="row">
 					<div class="col-md-12" >
@@ -35,20 +58,34 @@
 
 							<thead>
 								<tr>
-									<th>ID</th>
+									<th>书名</th>
 									<th>ISBN</th>
-									<th>位置</th>
-									<th>借书办理</th>
+									<th>作者</th>
+									<th>总数</th>
+									<th>已借数目</th>
+									<th>借书</th>
+									<th>预约</th>
 								</tr>
 							</thead>
-							{% for book in books %}
+							{% for book in booklist %}
 								<tr>
-									<td>{{ book.ID }}</td>
-									<td>{{ book.ISBN_id }}</td>
-									<td>{{book.position}}</td>
-                                    <td><a class="btn btn-default"
-                                        href="#"> 借书
-                                    </a></td>
+									<td>{{ book.bookName }}</td>
+									<td>{{ book.ISBN }}</td>
+									<td>{{book.author}}</td>
+									<td>{{book.totalNumber}}</td>
+                                    <td>{{book.borrowNumber}}</td>
+{#                                    {% if {{book.totalNumber}} == {{book.borrowNumber}} %}#}
+{#									    <td><a class="btn btn-default disabled" #}
+{#										    href="#"> 借书#}
+{#                                        </a></td>#}
+{#                                    {% else %}#}
+{#                                        <td><a class="btn btn-default"#}
+{#                                            href="#"> 借书#}
+{#                                        </a></td>#}
+{#                                    {% endif %}#}
+									<td><a class="btn btn-default"
+										href="#"> 预约
+									</a></td>
 								</tr>
                             {% endfor %}
 						</table>
@@ -72,7 +109,7 @@
 {#                        {% if {{page_Num}} == {{pageInfo.pageNum}} %}#}
 {#                            <li class="active"><a href="#">{{page_Num }}</a></li>#}
 {#                        {% else %}#}
-{#                            <li><a href="#">{{ page_Num }}</a></li>#}
+{#                            <li><a href="#">{{page_Num }}</a></li>#}
 {#                        {% endif %}#}
 {#                    {% endfor %}#}
 {#                    <li><a href="#">末页</a></li>#}
@@ -91,6 +128,5 @@
 		});
 	</script>
 	<script type="text/javascript" src="{% static 'utils/scripts/flat-ui.js' %}"></script>
-<script src="{% static 'utils/scripts/bganimation.js' %}"></script>
-</body>
+<script src="{% static 'utils/scripts/bganimation.js' %}"></script></body>
 </html>

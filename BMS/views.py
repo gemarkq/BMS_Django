@@ -83,6 +83,16 @@ def buildBooks(request):
 def navbar(request):
     return render(request, 'BMS/navbar.html')
 
+def querybookinfo(request):
+    return render(request, 'BMS/queryBookInfo.html')
+
+def querybooks(request):
+    books = {}
+    return render(request, 'BMS/queryBooks.html', books)
+
+def reservation(request):
+    return render(request, 'BMS/reservation.html')
+
 def borrow(request):
     form = borrowForm()
     if request.method == 'POST':
