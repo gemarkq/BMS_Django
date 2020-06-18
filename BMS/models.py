@@ -22,6 +22,8 @@ class booklist(models.Model):
     ISBN = models.CharField(primary_key=True, null=False, max_length=80)
     bookName = models.CharField(null=True, max_length=80)
     author = models.CharField(null=True, max_length=80)
+    def __str__(self):
+        return self.ISBN
 
 class books(models.Model):
     STATUS = (
