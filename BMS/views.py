@@ -5,8 +5,12 @@ from .forms import *
 from .models import readers, bms_admin
 from hashlib import sha1
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+
+@login_required(login_url='login')
 def mainPage(request):
     return render(request, 'BMS/mainpage.html')
 
@@ -40,7 +44,7 @@ def registerAdmin(request):
            pwdd = sh1.hexdigest()
            if pwd != cpwd:
                return redirect('/')
-           bms_admin.objects.get_or_create(gh=gh, name=xm, password=pwdd)
+           bms_admin.objects.get_or_create(gh=gh, username=xm, password=pwdd)
            msg = 'Admin register success'
            return render(request, 'BMS/registerAdmin.html')
     else:
@@ -49,9 +53,32 @@ def registerAdmin(request):
         return render(request, 'BMS/registerAdmin.html',context)
 
 def loginPage(request):
-    form = loginForm
+    if request.method == 'POST':
+        form = loginForm(request.POST)
+        gh_data = form.data['gh']
+        password_data = form.data['password']
+        user = bms_admin.objects.filter(gh = gh_data).first()
+        if user:
+            sh1 = sha1()
+            sh1.update(password_data.encode('utf-8'))
+            pwd = sh1.hexdigest()
+            print(user)
+            if user.password == pwd:
+                login(request, user)
+                messages.success(request, "成功登录")
+                return redirect('mainPage')
+            else:
+                messages.error(request, "登录失败")
+                return redirect('login')
+        else:
+            messages.error(request, '登录失败')
+    form = loginForm()
     context = {'form':form}
     return render(request, 'BMS/Login.html',context)
+
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
 
 def addBooks(request):
     form = addBooksForm()
@@ -60,9 +87,13 @@ def addBooks(request):
         form = addBooksForm(request.POST)
         if form.is_valid():
             form.save()
-            #messages.success(request, "成功录入")
+            messages.success(request, "成功录入")
+            return redirect('addBooks')
         else:
             print('error=', form.errors)
+            messages.error(request, "录入失败，重新输入")
+            return redirect('addBooks')
+
     context = {'form': form}
     return render(request, 'BMS/addBooks.html', context)
 
@@ -80,8 +111,17 @@ def buildBooks(request):
     context = {'form': form}
     return render(request, 'BMS/buildbook.html', context)
 
-def navbar(request):
-    return render(request, 'BMS/navbar.html')
+
+
+def querybookinfo(request):
+    return render(request, 'BMS/queryBookInfo.html')
+
+def querybooks(request):
+    books = {}
+    return render(request, 'BMS/queryBooks.html', books)
+
+def reservation(request):
+    return render(request, 'BMS/reservation.html')
 
 def borrow(request):
     form = borrowForm()
@@ -94,3 +134,6 @@ def borrow(request):
         print('error=', form.errors)
     context = {'form': form}
     return render(request, 'BMS/borrow.html', context)
+
+def borrowRecord(request):
+    return render(request, 'BMS/borrowRecord.html')

@@ -1,39 +1,46 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import AbstractUser
+
 # Create your models here.
 
-class bms_admin(models.Model):
-    gh = models.CharField(primary_key=True, null=False, max_length=80)
-    name = models.CharField(max_length=80, null=True)
+class bms_admin(AbstractUser):
+    gh = models.CharField(primary_key=True, null=False, max_length=80, unique=True)
+    username = models.CharField(max_length=80, null=True, unique=True)
     password = models.CharField(max_length=256, null=True)
 
-class readers(AbstractUser):
+class readers(models.Model):
+    username = models.CharField(null=True, max_length=80)
     readerId = models.CharField(primary_key=True, null=False, max_length=80)
-    # name = models.CharField(max_length=80, null=True)
     phoneNumber = PhoneNumberField(null=True)
     email = models.EmailField(null=True, unique=True)
     balance = models.DecimalField(max_digits=8, decimal_places=3, default=100.000)
-    # password = models.CharField(max_length=32, null=True)
-    class Meta:
-        db_table = 'myuser'
+    password = models.CharField(max_length=32, null=True)
 
 class booklist(models.Model):
     ISBN = models.CharField(primary_key=True, null=False, max_length=80)
     bookName = models.CharField(null=True, max_length=80)
     author = models.CharField(null=True, max_length=80)
+    publisher = models.CharField(null=True, max_length=80)
+    pub_date = models.DateField(null=True)
+    count = models.IntegerField(null=True)
     def __str__(self):
         return self.ISBN
 
 class books(models.Model):
     STATUS = (
-        ('预约', '预约'),
-        ('借出', '借出'),
-        ('架上', '架上'),
+        ('已预约', '已预约'),
+        ('未借出', '未借出'),
+        ('不外借', '不外借'),
+    )
+
+    POSITIONS = (
+        ('图书阅览室', '图书阅览室'),
+        ('图书流通室', '图书流通室'),
     )
 
     ID = models.CharField(primary_key=True, null=False, max_length=80)
-    position = models.CharField(null=True, max_length=80)
+    position = models.CharField(null=True, max_length=80, choices=POSITIONS)
     status = models.CharField(default='架上', choices=STATUS, max_length=80)
     ISBN = models.ForeignKey(booklist, on_delete=models.CASCADE)
 
