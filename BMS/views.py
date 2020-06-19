@@ -50,9 +50,29 @@ def registerAdmin(request):
         return render(request, 'BMS/registerAdmin.html',context)
 
 def loginPage(request):
-    form = loginForm
-    context = {'form':form}
-    return render(request, 'BMS/Login.html',context)
+    if request.method == 'POST':
+        form = loginForm(request.POST)
+        gh_data = form.data['gh']
+        password_data = form.data['password']
+        user = bms_admin.objects.filter(gh = gh_data).first()
+        if user:
+            sh1 = sha1()
+            sh1.update(password_data.encode('utf-8'))
+            pwd = sh1.hexdigest()
+            if pwd == user.password:
+                login(request, user)
+                messages.success(request, "成功登录")
+                return redirect('mainPage')
+            else:
+                messages.error(request, "登录失败")
+                return redirect('login')
+        else:
+            messages.error(request, '登录失败')
+            return redirect('login')
+    else:
+        form = loginForm()
+        context = {'form':form}
+        return render(request, 'BMS/Login.html',context)
 
 def addBooks(request):
     form = addBooksForm()
