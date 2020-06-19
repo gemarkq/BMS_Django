@@ -6,8 +6,11 @@ from .models import readers, bms_admin
 from hashlib import sha1
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+
+@login_required(login_url='login')
 def mainPage(request):
     return render(request, 'BMS/mainpage.html')
 
@@ -41,7 +44,7 @@ def registerAdmin(request):
            pwdd = sh1.hexdigest()
            if pwd != cpwd:
                return redirect('/')
-           bms_admin.objects.get_or_create(gh=gh, name=xm, password=pwdd)
+           bms_admin.objects.get_or_create(gh=gh, username=xm, password=pwdd)
            msg = 'Admin register success'
            return render(request, 'BMS/registerAdmin.html')
     else:
@@ -59,7 +62,8 @@ def loginPage(request):
             sh1 = sha1()
             sh1.update(password_data.encode('utf-8'))
             pwd = sh1.hexdigest()
-            if pwd == user.password:
+            print(user)
+            if user.password == pwd:
                 login(request, user)
                 messages.success(request, "成功登录")
                 return redirect('mainPage')
@@ -68,11 +72,13 @@ def loginPage(request):
                 return redirect('login')
         else:
             messages.error(request, '登录失败')
-            return redirect('login')
-    else:
-        form = loginForm()
-        context = {'form':form}
-        return render(request, 'BMS/Login.html',context)
+    form = loginForm()
+    context = {'form':form}
+    return render(request, 'BMS/Login.html',context)
+
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
 
 def addBooks(request):
     form = addBooksForm()
@@ -105,8 +111,7 @@ def buildBooks(request):
     context = {'form': form}
     return render(request, 'BMS/buildbook.html', context)
 
-def navbar(request):
-    return render(request, 'BMS/navbar.html')
+
 
 def querybookinfo(request):
     return render(request, 'BMS/queryBookInfo.html')

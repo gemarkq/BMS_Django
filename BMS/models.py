@@ -4,21 +4,18 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-class bms_admin(models.Model):
-    gh = models.CharField(primary_key=True, null=False, max_length=80)
-    name = models.CharField(max_length=80, null=True)
+class bms_admin(AbstractUser):
+    gh = models.CharField(primary_key=True, null=False, max_length=80, unique=True)
+    username = models.CharField(max_length=80, null=True, unique=True)
     password = models.CharField(max_length=256, null=True)
 
-
-class readers(AbstractUser):
+class readers(models.Model):
+    username = models.CharField(null=True, max_length=80)
     readerId = models.CharField(primary_key=True, null=False, max_length=80)
-    # name = models.CharField(max_length=80, null=True)
     phoneNumber = PhoneNumberField(null=True)
     email = models.EmailField(null=True, unique=True)
     balance = models.DecimalField(max_digits=8, decimal_places=3, default=100.000)
-    # password = models.CharField(max_length=32, null=True)
-    class Meta:
-        db_table = 'myuser'
+    password = models.CharField(max_length=32, null=True)
 
 class booklist(models.Model):
     ISBN = models.CharField(primary_key=True, null=False, max_length=80)

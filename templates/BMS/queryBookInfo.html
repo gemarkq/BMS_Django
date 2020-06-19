@@ -74,18 +74,18 @@
 									<td>{{book.author}}</td>
 									<td>{{book.totalNumber}}</td>
                                     <td>{{book.borrowNumber}}</td>
-{#                                    {% if {{book.totalNumber}} == {{book.borrowNumber}} %}#}
-{#									    <td><a class="btn btn-default disabled"#}
-{#										    href="#"> 借书#}
-{#                                        </a></td>#}
-{#                                    {% else %}#}
-{#                                        <td><a class="btn btn-default"#}
-{#                                            href="#"> 借书#}
-{#                                        </a></td>#}
-{#                                    {% endif %}#}
-{#									<td><a class="btn btn-default"#}
-{#										href="#"> 预约#}
-{#									</a></td>#}
+                                    {% if {{book.totalNumber}} == {{book.borrowNumber}} %}
+									    <td><a class="btn btn-default disabled"
+										    href="#"> 借书
+                                        </a></td>
+                                    {% else %}
+                                        <td><a class="btn btn-default"
+                                            href="#"> 借书
+                                        </a></td>
+                                    {% endif %}
+									<td><a class="btn btn-default"
+										href="#"> 预约
+									</a></td>
 								</tr>
                             {% endfor %}
 						</table>

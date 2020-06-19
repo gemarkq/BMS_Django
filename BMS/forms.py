@@ -61,14 +61,15 @@ class addBooksForm(forms.ModelForm):
     position = forms.CharField(label=u'位置', max_length=80, error_messages={'required': u'书名不能为空'},
                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入位置'}),
                                )
-    status = forms.CharField(label=u'状态', max_length=80, error_messages={'required': u'状态不能为空'},
+    status = forms.ChoiceField(label=u'状态', error_messages={'required': u'状态不能为空'},
                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入状态'}),
                              initial='架上')
     ISBN = forms.ModelChoiceField(label=u'ISBN_id', queryset=booklist.objects.all(),
-                                  widget=forms.Select(attrs={"class": "form-control",'placeholder': u'请选择ISBN号'}))
+                                widget=forms.Select(attrs={"class": "form-control",'placeholder': u'请选择ISBN号'}))
     class Meta:
         model = books
         fields = ['ID', 'position', 'status', 'ISBN']
+
 
 class borrowForm(forms.ModelForm):
     bookId = forms.IntegerField(label=u'图书ID', max_value= 10000, min_value = 0, error_messages={'required': u'图书id号不能为空'},

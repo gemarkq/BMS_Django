@@ -16,11 +16,11 @@
 {% include "BMS/navbar.html" %}
  {% if messages %}
         {% for message in messages %}
-            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                <div class="alert alert-success">
-                    <strong id =messages>{{ message }}!</strong>
-                </div>
-            {% endif %}
+{#            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}#}
+{#                <div class="alert alert-success">#}
+{#                    <strong id =messages>{{ message }}!</strong>#}
+{#                </div>#}
+{#            {% endif %}#}
             {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
                 <div class="alert alert-danger">
                     <strong id =messages>{{ message }}!</strong>
