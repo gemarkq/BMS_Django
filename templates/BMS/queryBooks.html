@@ -44,10 +44,10 @@
 							{% for book in books %}
 								<tr>
 									<td>{{ book.ID }}</td>
-									<td>{{ book.ISBN_id }}</td>
-									<td>{{book.position}}</td>
-                                    <td><a class="btn btn-default"
-                                        href="#"> 借书
+									<td>{{ book.ISBN }}</td>
+									<td>{{ book.position }}</td>
+                                    <td><a class="btn btn-info"
+                                        href="{% url 'borrow' %}?ID={{ book.ID }}"> 借书
                                     </a></td>
 								</tr>
                             {% endfor %}
