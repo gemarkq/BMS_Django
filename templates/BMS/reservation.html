@@ -31,15 +31,14 @@
 			<div class="col-md-12">
 				<div class="row">
 					<div class="col-sm-3" style="margin-top:1rem">
-						<form action="#" method="post">
-                            <h5>书名</h5>
-					            <p>{{ books.bookName }}</p>
+						<form action="#" method="post">{% csrf_token %}
                             <h5>ISBN</h5>
-                                <p>{{ books.ISBN }}</p>
+                                <p>{{ form.ISBN }}</p>
                             <h5>读者ID</h5>
-                                <input type="text" name="readerId_id" id="readerId_id" class="form-control"></input> 
+								<p>{{ form.readerId }}</p>
+<!--                                <input type="text" name="readerId_id" id="readerId_id" class="form-control"></input> -->
                             <br/>
-                            <input type="hidden" name="ISBN" value={{ books.ISBN }} /> 
+<!--                            <input type="hidden" name="ISBN" value={{ books.ISBN }} /> -->
                             <input type="submit" class="btn btn-primary btn-wide login-btn" value="确认预约" />
 						</form>
 					</div>

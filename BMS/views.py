@@ -185,7 +185,21 @@ def querybooks(request):
 
 
 def reservation(request):
-    return render(request, 'BMS/reservation.html')
+    form = reservationForm()
+    if request.method == 'POST':
+        form = reservationForm(request.POST)
+        userId = int(request.POST['readerId'])
+        userlist = readers.objects.filter(readerId=userId).values('readerId')
+        print('userid=',type(userId))
+        print('len=',len(userlist))
+        if form.is_valid() and len(userlist) > 0:
+            messages.success(request, "预约成功")
+            return redirect('reservation')
+        else:
+            messages.error(request, "读者ID不存在，请重新输入")
+            return redirect('reservation')
+    context = {'form': form}
+    return render(request, 'BMS/reservation.html', context)
 
 
 def borrowbook(request):

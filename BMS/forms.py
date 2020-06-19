@@ -84,3 +84,17 @@ class borrowForm(forms.ModelForm):
     class Meta:
         model = borrow
         fields = '__all__'
+
+class reservationForm(forms.ModelForm):
+    ISBN = forms.ModelChoiceField(label=u'ISBN_id', queryset=booklist.objects.all(),
+                                  widget=forms.Select(attrs={"class": "form-control", 'placeholder': u'请选择ISBN号'}))
+    readerId = forms.IntegerField(label=u'读者ID', max_value=10000, min_value=0,
+                                  error_messages={'required': u'读者id号不能为空'},
+                                  widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入读者id号'}))
+    reserveLength = forms.IntegerField(label=u'预约保留时间', min_value=0, max_value=10, initial=10)
+    reserveTime = forms.DateField(label=u'预约日期')
+    forms.DateField()
+    class Meta:
+        model = reservation
+        unique_together = (("ISBN", "readerId"),)
+        fields ='__all__'
