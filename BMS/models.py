@@ -22,18 +22,26 @@ class booklist(models.Model):
     ISBN = models.CharField(primary_key=True, null=False, max_length=80)
     bookName = models.CharField(null=True, max_length=80)
     author = models.CharField(null=True, max_length=80)
+    publisher = models.CharField(null=True, max_length=80)
+    pub_date = models.DateField(null=True)
+    count = models.IntegerField(null=True)
     def __str__(self):
         return self.ISBN
 
 class books(models.Model):
     STATUS = (
-        ('预约', '预约'),
-        ('借出', '借出'),
-        ('架上', '架上'),
+        ('已预约', '已预约'),
+        ('未借出', '未借出'),
+        ('不外借', '不外借'),
+    )
+
+    POSITIONS = (
+        ('图书阅览室', '图书阅览室'),
+        ('图书流通室', '图书流通室'),
     )
 
     ID = models.CharField(primary_key=True, null=False, max_length=80)
-    position = models.CharField(null=True, max_length=80)
+    position = models.CharField(null=True, max_length=80, choices=POSITIONS)
     status = models.CharField(default='架上', choices=STATUS, max_length=80)
     ISBN = models.ForeignKey(booklist, on_delete=models.CASCADE)
 

@@ -27,7 +27,7 @@
 		<div class="row">
 			<div class="col-md-12">
 			<h5>图书查询</h5>
-				<form name="bookQuery" action="#" method="get">
+				<form name="bookQuery" action="#" method="POST">
 					<div class="row">
 						<div class="col-md-4">
 							<strong>查询条件<br></strong> <select name="serc"
@@ -75,7 +75,7 @@
 									<td>{{book.totalNumber}}</td>
                                     <td>{{book.borrowNumber}}</td>
 {#                                    {% if {{book.totalNumber}} == {{book.borrowNumber}} %}#}
-{#									    <td><a class="btn btn-default disabled" #}
+{#									    <td><a class="btn btn-default disabled"#}
 {#										    href="#"> 借书#}
 {#                                        </a></td>#}
 {#                                    {% else %}#}
@@ -83,9 +83,9 @@
 {#                                            href="#"> 借书#}
 {#                                        </a></td>#}
 {#                                    {% endif %}#}
-									<td><a class="btn btn-default"
-										href="#"> 预约
-									</a></td>
+{#									<td><a class="btn btn-default"#}
+{#										href="#"> 预约#}
+{#									</a></td>#}
 								</tr>
                             {% endfor %}
 						</table>

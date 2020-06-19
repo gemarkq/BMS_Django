@@ -10,6 +10,7 @@ urlpatterns = [
     path('mainpage/', views.mainPage, name='mainPage'),
     path('addBooks/', views.addBooks, name='addBooks'),
     path('buildbook/', views.buildBooks, name='buildbook'),
+    path('borrowrecode', views.borrowRecord, name='borrowrecord'),
     path('navbar/', views.navbar),
     path('borrow/', views.borrow),
     path('querybook/', views.querybooks, name='querybook'),

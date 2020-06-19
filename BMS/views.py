@@ -5,6 +5,7 @@ from .forms import *
 from .models import readers, bms_admin
 from hashlib import sha1
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
 def mainPage(request):
@@ -60,9 +61,13 @@ def addBooks(request):
         form = addBooksForm(request.POST)
         if form.is_valid():
             form.save()
-            #messages.success(request, "成功录入")
+            messages.success(request, "成功录入")
+            return redirect('addBooks')
         else:
             print('error=', form.errors)
+            messages.error(request, "录入失败，重新输入")
+            return redirect('addBooks')
+
     context = {'form': form}
     return render(request, 'BMS/addBooks.html', context)
 
@@ -104,3 +109,6 @@ def borrow(request):
         print('error=', form.errors)
     context = {'form': form}
     return render(request, 'BMS/borrow.html', context)
+
+def borrowRecord(request):
+    return render(request, 'BMS/borrowRecord.html')
