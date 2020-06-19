@@ -21,8 +21,27 @@
 
 <script type='text/javascript' src="{% static 'utils/scripts/particles.js' %}"></script><link href="{% static 'utils/css/animate.css' %}" rel="stylesheet"></head>
 
-<body>>
+<body>
     {% include 'BMS/navbar.html' %}
+       {% if messages %}
+        {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                <div class="alert alert-success">
+                    <strong id =messages>{{ message }}!</strong>
+                </div>
+            {% endif %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                <div class="alert alert-danger">
+                    <strong id =messages>{{ message }}!</strong>
+                </div>
+            {% endif %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                <div class="alert alert-danger">
+                    <strong id =messages>{{ message }}!</strong>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -31,19 +50,21 @@
 			<div class="col-md-12">
 				<div class="row">
 					<div class="col-sm-3" style="margin-top:1rem">
-						<form action="#" method="post">{% csrf_token %}
+						<form action="#" method="post">
+                            {% csrf_token %}
                             <h5>图书ID</h5>
-								{{ form.bookId }}
+								{{ ID.id }}
 							<h5>借书日期</h5>
-								{{ form.borrowTime }}
+								{{ time.borrow }}
 								<!--<input type="text" name="borrowTime" id="borrowTime" class="form-control"></input> -->
 							<h5>还书日期</h5>
-								{{ form.returnTime }}
+								{{ time.return }}
                                 <!--<input type="text" name="returnTime" id="returnTime" class="form-control"></input> -->
                             <h5>读者ID</h5>
 								{{form.readerId}}
                                 <!--<input type="text" name="readerId_id" id="readerId_id" class="form-control"></input>-->
                             <!--<input type="hidden" name="bookId_id" value={{ books.Id }} />-->
+                            <br>
                             <input type="submit" class="btn btn-primary btn-wide login-btn" value="确认借阅" />
 						</form>
 					</div>

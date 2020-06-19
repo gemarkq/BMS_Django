@@ -12,7 +12,7 @@ urlpatterns = [
     path('addBooks/', views.addBooks, name='addBooks'),
     path('buildbook/', views.buildBooks, name='buildbook'),
     path('borrowrecode', views.borrowRecord, name='borrowrecord'),
-    path('borrow/', views.borrow),
+    path('borrow/', views.borrowbook, name='borrow'),
     path('querybook/', views.querybooks, name='querybook'),
     path('reservation/', views.reservation, name='reservation'),
     path('querybookinfo/', views.querybookinfo, name='querybookinfo'),

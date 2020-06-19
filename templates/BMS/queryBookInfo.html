@@ -1,4 +1,5 @@
 {% load static %}
+{% load generalfilters %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,11 +29,12 @@
 			<div class="col-md-12">
 			<h5>图书查询</h5>
 				<form name="bookQuery" action="#" method="POST">
+                    {% csrf_token %}
 					<div class="row">
 						<div class="col-md-4">
 							<strong>查询条件<br></strong> <select name="serc"
 								class="form-control select select-primary select-block mbl">
-								<option value="all">全部图书</option>
+								<option value="all">书名</option>
 								<option value="sid">按ISBN查询</option>
 							</select>
 						</div>
@@ -63,29 +65,37 @@
 									<th>作者</th>
 									<th>总数</th>
 									<th>已借数目</th>
+                                    <th>不可借数</th>
 									<th>借书</th>
 									<th>预约</th>
 								</tr>
 							</thead>
-							{% for book in booklist %}
+							{% for book in books %}
 								<tr>
 									<td>{{ book.bookName }}</td>
 									<td>{{ book.ISBN }}</td>
-									<td>{{book.author}}</td>
-									<td>{{book.totalNumber}}</td>
-                                    <td>{{book.borrowNumber}}</td>
-                                    {% if {{book.totalNumber}} == {{book.borrowNumber}} %}
+									<td>{{ book.author }}</td>
+									<td>{{ book.count }}</td>
+                                    <td>{{ count_borrow|get_item:book.ISBN }}</td>
+                                    <td>{{ count_borrow2|get_item:book.ISBN }}</td>
+                                    {% if book.count == count_borrow|get_item:book.ISBN|add_item:count_borrow2 %}
 									    <td><a class="btn btn-default disabled"
 										    href="#"> 借书
                                         </a></td>
                                     {% else %}
-                                        <td><a class="btn btn-default"
-                                            href="#"> 借书
+                                        <td><a class="btn btn-info"
+                                            href="{% url 'querybook' %}?ISBN={{ book.ISBN }}"> 借书
                                         </a></td>
                                     {% endif %}
-									<td><a class="btn btn-default"
-										href="#"> 预约
-									</a></td>
+									{% if book.count == count_borrow|get_item:book.ISBN|add_item:count_borrow2 %}
+									    <td><a class="btn btn-info"
+										    href="#"> 预约
+                                        </a></td>
+                                    {% else %}
+                                        <td><a class="btn btn-default disabled"
+                                            href="#"> 预约
+                                        </a></td>
+                                    {% endif %}
 								</tr>
                             {% endfor %}
 						</table>
@@ -96,27 +106,27 @@
 		</div>
 		
 		
-{#		<div class="row">#}
-{#            <!--分页文字信息  -->#}
-{#            <div class="col-md-6">当前 {{pageInfo.pageNum }}页,总{{pageInfo.pages }}#}
-{#                页,总{{pageInfo.total }} 条记录</div>#}
-{#            <!-- 分页条信息 -->#}
-{#            <div class="col-md-6">#}
-{#                <nav aria-label="Page navigation">#}
-{#                <ul class="pagination bg-primary">#}
-{#                    <li><a href="#">首页</a></li>#}
-{#                    {% for page_Num in pageInfo.pages %}#}
-{#                        {% if {{page_Num}} == {{pageInfo.pageNum}} %}#}
-{#                            <li class="active"><a href="#">{{page_Num }}</a></li>#}
-{#                        {% else %}#}
-{#                            <li><a href="#">{{page_Num }}</a></li>#}
-{#                        {% endif %}#}
-{#                    {% endfor %}#}
-{#                    <li><a href="#">末页</a></li>#}
-{#                </ul>#}
-{#                </nav>#}
-{#            </div>#}
-{#        </div>#}
+		<div class="row">
+            <!--分页文字信息  -->
+            <div class="col-md-6">当前 {{books.number}}页,总{{books.paginator.num_pages }}
+                页,总{{books.paginator.count }} 条记录</div>
+            <!-- 分页条信息 -->
+            <div class="col-md-6">
+                <nav aria-label="Page navigation">
+                <ul class="pagination bg-primary">
+                    <li><a href="?page=1">首页</a></li>
+                    {% for page_Num in books.paginator.page_range %}
+                        {% if page_Num == books.number %}
+                            <li class="active"><a href="?page={{ page_Num }}">{{page_Num }}</a></li>
+                        {% else %}
+                            <li><a href="?page={{ page_Num }}">{{page_Num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    <li><a href="?page={{ books.paginator.num_pages }}">末页</a></li>
+                </ul>
+                </nav>
+            </div>
+        </div>
 	
 		
 	</div>

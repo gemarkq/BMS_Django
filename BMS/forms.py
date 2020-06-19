@@ -72,15 +72,15 @@ class addBooksForm(forms.ModelForm):
 
 
 class borrowForm(forms.ModelForm):
-    bookId = forms.IntegerField(label=u'图书ID', max_value= 10000, min_value = 0, error_messages={'required': u'图书id号不能为空'},
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入图书id号'}))
+    # bookId = forms.IntegerField(label=u'图书ID', max_value= 10000, min_value = 0, error_messages={'required': u'图书id号不能为空'},
+    #                         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入图书id号'}))
     readerId = forms.IntegerField(label=u'读者ID', max_value= 10000, min_value = 0, error_messages={'required': u'读者id号不能为空'},
                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入读者id号'}))
-    status = forms.CharField(label=u'状态', max_length=80, initial='未归还')
-    borrowTime = forms.DateField(label=u'借阅时间', error_messages={'required': u'借阅时间不能为空'},
-                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'xxxx-xx-xx'}))
-    returnTime = forms.DateField(label=u'归还时间', error_messages={'required': u'归还时间不能为空'},
-                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'xxxx-xx-xx'}))
+    # status = forms.CharField(label=u'状态', max_length=80, initial='未归还')
+    # borrowTime = forms.DateField(label=u'借阅时间', error_messages={'required': u'借阅时间不能为空'},
+    #                              widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'xxxx-xx-xx'}))
+    # returnTime = forms.DateField(label=u'归还时间', error_messages={'required': u'归还时间不能为空'},
+    #                              widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'xxxx-xx-xx'}))
     class Meta:
         model = borrow
         fields = '__all__'
