@@ -14,9 +14,10 @@ urlpatterns = [
     path('mainpage/', views.mainPage, name='mainPage'),
     path('addBooks/', views.addBooks, name='addBooks'),
     path('buildbook/', views.buildBooks, name='buildbook'),
-    path('borrowrecode', views.borrowRecord, name='borrowrecord'),
+    path('borrowrecord', views.borrowRecord, name='borrowrecord'),
     path('borrow/', views.borrowbook, name='borrow'),
     path('querybook/', views.querybooks, name='querybook'),
-    path('reservation/', views.reservation, name='reservation'),
+    path('reservation/', views.Reservation, name='reservation'),
     path('querybookinfo/', views.querybookinfo, name='querybookinfo'),
+    path('reservationRecord/', views.reservationRecord, name='reservationRecord')
 ]
