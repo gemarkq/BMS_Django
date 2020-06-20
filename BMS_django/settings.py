@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'phonenumber_field',
     'BMS',
+    'django_apscheduler',
 ]
+APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
