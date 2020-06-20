@@ -60,8 +60,8 @@ class borrow(models.Model):
 class reservation(models.Model):
     reserveTime = models.DateField(auto_now_add=True)
     reserveLength = models.IntegerField()
-    readerId = models.ForeignKey(readers, on_delete=models.CASCADE)
     ISBN = models.ForeignKey(booklist, on_delete=models.CASCADE, default='null')
+    readerId = models.ForeignKey(readers, on_delete=models.CASCADE)
     ##bookId = models.ForeignKey(books, on_delete=models.CASCADE)
 
 

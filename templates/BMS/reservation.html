@@ -4,6 +4,7 @@
 <head>
 <script type="text/javascript" src="{% static 'utils/scripts/flat-ui.js' %}"></script>
 <meta name="viewport"
+
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <link rel="shortcut icon" href="{% static 'utils/image/favicon.ico' %}"
 	type="image/x-icon" />
@@ -22,7 +23,30 @@
 <script type='text/javascript' src="{% static 'utils/scripts/particles.js' %}"></script><link href="{% static 'utils/css/animate.css' %}" rel="stylesheet"></head>
 
 <body>
+
     {% include 'BMS/navbar.html' %}
+	{% if messages %}
+        {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                <div class="alert alert-success">
+                    <strong id =messages>{{ message }}!</strong>
+                </div>
+            {% endif %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                <div class="alert alert-danger">
+                    <strong id =messages>{{ message }}!</strong>
+                </div>
+            {% endif %}
+	{% endfor %}
+<!--	        {% for field in form %}-->
+<!--    			<div class="fieldWrapper">-->
+<!--        		    {{field.errors}}1{{field.label_tag}}-->
+<!--&lt;!&ndash;        		{{ field.label_tag }} {{ field }}&ndash;&gt;-->
+<!--    			</div>-->
+<!--	        {% endfor %}-->
+<!--    {% endif %}-->
+
+
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -32,10 +56,12 @@
 				<div class="row">
 					<div class="col-sm-3" style="margin-top:1rem">
 						<form action="#" method="post">{% csrf_token %}
+							<h5>预约保留时间</h5>
+								<p>{{ form.reserveLength }}<p>
                             <h5>ISBN</h5>
-                                <p>{{ form.ISBN }}</p>
+                                <p>{{ form.ISBN_id }}</p>
                             <h5>读者ID</h5>
-								<p>{{ form.readerId }}</p>
+								<p>{{ form.readerId_id }}</p>
 <!--                                <input type="text" name="readerId_id" id="readerId_id" class="form-control"></input> -->
                             <br/>
 <!--                            <input type="hidden" name="ISBN" value={{ books.ISBN }} /> -->

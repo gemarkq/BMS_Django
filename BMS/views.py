@@ -109,14 +109,18 @@ def addBooks(request):
 def buildBooks(request):
     form = buildbookForm()
     if request.method == 'POST':
-        print('form=', request.POST)
+
         form = buildbookForm(request.POST)
+        print('form=', form)
+        print('form.data=',form.data)
         if form.is_valid():
-            form.save()
-            # messages.success(request, "成功录入")
+            #form.save()
+            messages.success(request, "成功录入")
+            redirect('buildbook')
         else:
             print('error=', form.errors)
-            # messages.warning(request, "录入失败")
+            messages.warning(request, "录入失败")
+            redirect('buildbook')
     context = {'form': form}
     return render(request, 'BMS/buildbook.html', context)
 
@@ -184,23 +188,69 @@ def querybooks(request):
     return render(request, 'BMS/queryBooks.html', {'books': book})
 
 
-def reservation(request):
+def Reservation(request):
     form = reservationForm()
     if request.method == 'POST':
-        form = reservationForm(request.POST)
-        userId = int(request.POST['readerId'])
+        postcontent = request.POST.copy()
+        print('post=', postcontent)
+        userId = postcontent['readerId_id']
         userlist = readers.objects.filter(readerId=userId).values('readerId')
-        print('userid=',type(userId))
-        print('len=',len(userlist))
-        if form.is_valid() and len(userlist) > 0:
-            messages.success(request, "预约成功")
+        form = reservationForm(postcontent)
+
+        print('form=',form.data)
+        print('length=',form.data['reserveLength'])
+        print('isbn=', form.data['ISBN_id'])
+        print('readerId=',form.data['readerId_id'])
+        print(form.is_valid())
+        if len(userlist) > 0:
+            reader_obj = readers.objects.get(readerId=form.data['readerId_id'])
+            booklist_obj =  booklist.objects.get(ISBN=form.data['ISBN_id'])
+            result = reservation.objects.filter(readerId = reader_obj, ISBN = booklist_obj).values('id')
+            if len(result) == 0:
+                messages.success(request, "预约成功")
+                reservation.objects.create(readerId = reader_obj, ISBN = booklist_obj, reserveLength=form.data['reserveLength'])
+                return redirect('reservation')
+            messages.error(request, "该用户已经预约过该图书")
             return redirect('reservation')
         else:
-            messages.error(request, "读者ID不存在，请重新输入")
+            messages.error(request, "该用户不存在，请重新输入")
             return redirect('reservation')
+    else:#get
+        id = request.GET.get('id')
+        print('id=',id)
+        print('11111111111111')
     context = {'form': form}
     return render(request, 'BMS/reservation.html', context)
 
+def reservationRecord(request):
+    reservations = reservation.objects.all().order_by()
+    if request.method == 'POST':
+        sec = request.POST.get('serc')
+        condition = request.POST.get('condition')
+        if sec == 'isbn':
+            print('*')
+            reservations = reservation.objects.filter(ISBN=condition)
+            paginator = Paginator(reservations, 7)
+            page = request.GET.get('page')
+            pageInfo = paginator.get_page(page)
+            print(pageInfo)
+            context = {'pageInfo': pageInfo, 'reservations': reservations}
+            return render(request, 'BMS/reservationRecord.html', context)
+        else:
+            print('**')
+            reservations = reservation.objects.filter(readerId=condition)
+            paginator = Paginator(reservations, 7)
+            page = request.GET.get('page')
+            pageInfo = paginator.get_page(page)
+            print(pageInfo)
+            context = {'pageInfo': pageInfo, 'reservations': reservations}
+            return render(request, 'BMS/reservationRecord.html', context)
+    paginator = Paginator(reservations, 7)
+    page = request.GET.get('page')
+    pageInfo = paginator.get_page(page)
+    print(pageInfo)
+    context = {'pageInfo': pageInfo, 'reservations':reservations}
+    return render(request, 'BMS/reservationRecord.html', context)
 
 def borrowbook(request):
     book_id = request.GET.get('ID')
