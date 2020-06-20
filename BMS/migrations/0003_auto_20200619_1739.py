@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('auth', '0011_update_proxy_permissions'),
-        ('BMS', '0002_auto_20200619_0536'),
+        #('BMS', '0002_auto_20200619_0536'),
     ]
 
     operations = [

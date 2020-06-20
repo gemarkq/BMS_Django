@@ -1,4 +1,5 @@
 {% load static %}
+{% load generalfilters %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -74,6 +75,7 @@
 									<th>记录号</th>
 									<th>预约日期</th>
 									<th>预约时长</th>
+									<th>书名</th>
 									<th>图书ISBN</th>
 									<th>读者ID</th>
 									<th>删除</th>
@@ -84,8 +86,10 @@
 									<td>{{ reservation.id }}</td>
 									<td>{{ reservation.reserveTime }}</td>
 									<td>{{reservation.reserveLength}}</td>
+									<td>{{ bookname|get_item2:reservation.ISBN}}</td>
 									<td>{{reservation.ISBN}}</td>
                                     <td>{{reservation.readerId_id}}</td>
+
 									<td><a class="btn btn-info" href="{%url 'reservationRecord'%}?
 											id={{reservation.id}}"> 删除
 									</a></td>
