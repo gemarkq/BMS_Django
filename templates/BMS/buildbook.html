@@ -19,7 +19,7 @@
 </head>
 
 {% include 'BMS/navbar.html' %}
-{% if messages %}
+    {% if messages %}
         {% for message in messages %}
             {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
                 <div class="alert alert-success">
@@ -32,6 +32,13 @@
                 </div>
             {% endif %}
         {% endfor %}
+
+<!--            {% for field in form %}-->
+<!--    			<div class="fieldWrapper">-->
+<!--        		    {{field.errors}}1{{field.label_tag}}-->
+<!--&lt;!&ndash;        		{{ field.label_tag }} {{ field }}&ndash;&gt;-->
+<!--    			</div>-->
+<!--	        {% endfor %}-->
     {% endif %}
 
 <div class="container">

@@ -1,2 +1,2 @@
-# BMS_Django
+# BMS_Django 数据库大作业
 利用django搭建图书管理系统，实现入库，借书，还书，预约等功能
