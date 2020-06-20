@@ -9,8 +9,24 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.core.paginator import Paginator
-from django.urls import reverse
-import datetime, timedelta
+import datetime, timedelta, time
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
+
+scheduler = BackgroundScheduler()
+scheduler.add_jobstore(DjangoJobStore(), 'default')
+
+@register_job(scheduler, 'interval', seconds=1)
+def test_job():
+    time.sleep(4)
+    print("I'm a test a job!")
+
+register_events(scheduler)
+
+scheduler.start()
+print('Scheduler started!')
+
+
 
 
 @login_required(login_url='login')
