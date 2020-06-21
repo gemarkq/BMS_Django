@@ -10,6 +10,10 @@ def get_item(dictionary, key):
     return dictionary.get(key)
 
 @register.filter
+def get_item2(dictionary, key):#用于外键
+    return dictionary.get(key.ISBN)
+
+@register.filter
 def add_item(value,b):
     # print('%^&*')
     # print(a)

@@ -16,10 +16,27 @@ from django_apscheduler.jobstores import DjangoJobStore, register_events, regist
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), 'default')
 
-@register_job(scheduler, 'interval', seconds=1)
+def updateReservationRecord():
+    wait_list = []
+    print("scan DB && under updating:")
+    result = reservation.objects.raw('select id from BMS_reservation '
+                                     'where DATEDIFF(CURDATE(), BMS_reservation.reserveTime)'
+                                     '>= BMS_reservation.reserveLength')
+    for item in result:
+        wait_list.append(item.id)
+        print(item.id)
+    if len(wait_list):
+        for id in wait_list:
+            reservation.objects.filter(id=id).delete()
+
+
+@register_job(scheduler, 'interval', seconds=86400)#86400
 def test_job():
     time.sleep(4)
-    print("I'm a test a job!")
+    updateReservationRecord()
+
+
+
 
 register_events(scheduler)
 
@@ -231,14 +248,22 @@ def Reservation(request):
         else:
             messages.error(request, "该用户不存在，请重新输入")
             return redirect('reservation')
-    else:#get
-        id = request.GET.get('id')
-        print('id=',id)
-        print('11111111111111')
     context = {'form': form}
     return render(request, 'BMS/reservation.html', context)
 
 def reservationRecord(request):
+    id = request.GET.get('id')
+    isbn = request.GET.get('isbn')
+    #print(type(isbn),isbn=='ISBN7-302-02368-24')
+    if id is not None:
+        reservation.objects.filter(id=id).delete()
+
+    books = booklist.objects.all()
+    bookname = {}
+    for book in books:
+        #print(book.ISBN,book.bookName)
+        bookname[book.ISBN] = book.bookName
+
     reservations = reservation.objects.all().order_by()
     if request.method == 'POST':
         sec = request.POST.get('serc')
@@ -250,7 +275,7 @@ def reservationRecord(request):
             page = request.GET.get('page')
             pageInfo = paginator.get_page(page)
             print(pageInfo)
-            context = {'pageInfo': pageInfo, 'reservations': reservations}
+            context = {'pageInfo': pageInfo, 'reservations': reservations, 'bookname':bookname}
             return render(request, 'BMS/reservationRecord.html', context)
         else:
             print('**')
@@ -259,13 +284,15 @@ def reservationRecord(request):
             page = request.GET.get('page')
             pageInfo = paginator.get_page(page)
             print(pageInfo)
-            context = {'pageInfo': pageInfo, 'reservations': reservations}
+            context = {'pageInfo': pageInfo, 'reservations': reservations, 'bookname':bookname}
             return render(request, 'BMS/reservationRecord.html', context)
+
     paginator = Paginator(reservations, 7)
     page = request.GET.get('page')
     pageInfo = paginator.get_page(page)
     print(pageInfo)
-    context = {'pageInfo': pageInfo, 'reservations':reservations}
+    #print(bookname)
+    context = {'pageInfo': pageInfo, 'reservations':reservations, 'bookname':bookname}
     return render(request, 'BMS/reservationRecord.html', context)
 
 def borrowbook(request):
