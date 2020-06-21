@@ -1,4 +1,5 @@
 {% load static %}
+{% load generalfilters %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +11,19 @@
 <meta charset="UTF-8">
 <title>图书管理系统</title>
 
+<!--&lt;!&ndash; 标题图标、CSS-->
+<!--、js、jQ &ndash;&gt;-->
+<!--<script type="text/javascript" src="{% static 'utils/js/jquery-3.3.1.min.js' %}"></script>-->
+<!--&lt;!&ndash; Loading Bootstrap &ndash;&gt;-->
+<!--<link href="{% static 'utils/css/vendor/bootstrap.min.css' %}" rel="stylesheet">-->
+
+<!--&lt;!&ndash; Loading Flat UI Pro &ndash;&gt;-->
+<!--<link href="{% static 'utils/css/flat-ui.css' %}" rel="stylesheet">-->
+<!--&lt;!&ndash; Loading Flat UI JS &ndash;&gt;-->
+<!--<script type="text/javascript" src="{% static 'utils/scripts/flat-ui.min.js' %}"></script>-->
+<!--<script type='text/javascript' src="{% static 'utils/scripts/particles.js' &}"></script>-->
+<!--	<link href="{% static 'utils/css/animate.css' %}" rel="stylesheet"></head>-->
+
 <!-- 标题图标、CSS、js、jQ -->
 <script type="text/javascript" src="{% static 'utils/js/jquery-3.3.1.min.js' %}"></script>
 <!-- Loading Bootstrap -->
@@ -18,20 +32,21 @@
 <link href="{% static 'utils/css/flat-ui.css' %}" rel="stylesheet">
 <!-- Loading Flat UI JS -->
 <script type="text/javascript" src="{% static 'utils/scripts/flat-ui.min.js' %}"></script>
-<script type='text/javascript' src="{% static 'utils/scripts/particles.js' &}"></script><link href="{% static 'utils/css/animate.css' %}" rel="stylesheet"></head>
+<script type='text/javascript' src="{% static 'utils/scripts/particles.js' %}"></script>
+    <link href="{% static 'utils/css/animate.css' %}" rel="stylesheet"></head>
 
 <body>
-    {% include 'navbar.html' %}  
+    {% include 'BMS/navbar.html' %}
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
 			<h5>记录查询</h5>
-				<form name="bookQuery" action="#" method="get">
+				<form name="bookQuery" action="#" method="post">{% csrf_token %}
 					<div class="row">
 						<div class="col-md-4">
 							<strong>查询条件<br></strong> <select name="serc"
 								class="form-control select select-primary select-block mbl">
-								<option value="all">图书ISBN</option>
+								<option value="isbn">图书ISBN</option>
 								<option value="sid">用户ID</option>
 							</select>
 						</div>
@@ -60,6 +75,7 @@
 									<th>记录号</th>
 									<th>预约日期</th>
 									<th>预约时长</th>
+									<th>书名</th>
 									<th>图书ISBN</th>
 									<th>读者ID</th>
 									<th>删除</th>
@@ -70,10 +86,12 @@
 									<td>{{ reservation.id }}</td>
 									<td>{{ reservation.reserveTime }}</td>
 									<td>{{reservation.reserveLength}}</td>
+									<td>{{ bookname|get_item2:reservation.ISBN}}</td>
 									<td>{{reservation.ISBN}}</td>
                                     <td>{{reservation.readerId_id}}</td>
-									<td><a class="btn btn-default"
-										href="#"> 删除
+
+									<td><a class="btn btn-info" href="{%url 'reservationRecord'%}?
+											id={{reservation.id}}"> 删除
 									</a></td>
 								</tr>
                             {% endfor %}
@@ -87,21 +105,21 @@
 		
 		<div class="row">
             <!--分页文字信息  -->
-            <div class="col-md-6">当前 {{pageInfo.pageNum }}页,总{{pageInfo.pages }}
-                页,总{{pageInfo.total }} 条记录</div>
+            <div class="col-md-6">当前 {{pageInfo.number }}页,总{{pageInfo.paginator.num_pages }}
+                页,总{{pageInfo.paginator.count }} 条记录</div>
             <!-- 分页条信息 -->
             <div class="col-md-6">
                 <nav aria-label="Page navigation">
                 <ul class="pagination bg-primary">
-                    <li><a href="#">首页</a></li>
+                    <li><a href="?page=1">首页</a></li>
                     {% for page_Num in pageInfo.pages %}
-                        {% if {{page_Num}} == {{pageInfo.pageNum}} %}
-                            <li class="active"><a href="#">{{page_Num }}</a></li>
+                        {% if page_Num == pageInfo.pageNum %}
+                            <li class="active"><a href="?page={{ page_Num }}">{{page_Num }}</a></li>
                         {% else %}
-                            <li><a href="#">{{page_Num }}</a></li>
+                            <li><a href="?page={{ page_Num }}">{{page_Num }}</a></li>
                         {% endif %}
                     {% endfor %}
-                    <li><a href="#">末页</a></li>
+                    <li><a href="?page={{ books.paginator.num_pages }}">末页</a></li>
                 </ul>
                 </nav>
             </div>
