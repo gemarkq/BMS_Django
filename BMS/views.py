@@ -318,9 +318,13 @@ def borrowbook(request):
                 borrow.objects.get_or_create(readerId=readers.objects.get(readerId=form.data['readerId']), returnTime=return_time,
                                         borrowTime=borrow_time, bookId=books.objects.get(ID=book_id), status='未归还')
                 book = books.objects.get(ID=book_id)
+                isbn = book.ISBN
+                print(type(isbn),isbn)
                 book.status='已借出'
                 book.save()
                 messages.success(request,'借阅成功')
+                reservation.objects.filter(readerId=readers.objects.get(readerId=form.data['readerId']),ISBN=isbn).delete()
+                #print("删除成功！！")
                 return redirect('mainPage')
         else:
             messages.error(request, '读者号有误，请重新输入')
