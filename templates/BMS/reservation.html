@@ -37,14 +37,14 @@
                     <strong id =messages>{{ message }}!</strong>
                 </div>
             {% endif %}
-	{% endfor %}
-<!--	        {% for field in form %}-->
-<!--    			<div class="fieldWrapper">-->
-<!--        		    {{field.errors}}1{{field.label_tag}}-->
-<!--&lt;!&ndash;        		{{ field.label_tag }} {{ field }}&ndash;&gt;-->
-<!--    			</div>-->
-<!--	        {% endfor %}-->
-<!--    {% endif %}-->
+	    {% endfor %}
+        {% for field in form %}
+
+            {{field.errors}}1{{field.label_tag}}
+            {{ field.label_tag }} {{ field }}
+
+        {% endfor %}
+    {% endif %}
 
 
 	<div class="container">
@@ -59,7 +59,7 @@
 							<h5>预约保留时间</h5>
 								<p>{{ form.reserveLength }}<p>
                             <h5>ISBN</h5>
-                                <p>{{ form.ISBN_id }}</p>
+                                <p>{{ isbn.id }}</p>
                             <h5>读者ID</h5>
 								<p>{{ form.readerId_id }}</p>
 <!--                                <input type="text" name="readerId_id" id="readerId_id" class="form-control"></input> -->
