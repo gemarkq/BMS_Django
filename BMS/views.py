@@ -20,17 +20,18 @@ scheduler.add_jobstore(DjangoJobStore(), 'default')
 
 
 def updateReservationRecord():
-    wait_list = []
     print("scan DB && under updating:")
-    result = reservation.objects.raw('select id from BMS_reservation '
+    wait_list = reservation.objects.raw('select id, ISBN_id, status from BMS_reservation '
                                      'where DATEDIFF(CURDATE(), BMS_reservation.reserveTime)'
                                      '>= BMS_reservation.reserveLength')
-    for item in result:
-        wait_list.append(item.id)
-        print(item.id)
-    if len(wait_list):
-        for id in wait_list:
-            reservation.objects.filter(id=id).delete()
+    for item in wait_list:
+        reservation.objects.filter(id=item.id).delete()
+        if item.status == '书已入库':#该状态时，books不会为空集，若为空集说明其他过程出错
+            book = books.objects.filter(ISBN=item.ISBN_id, status='已预约')[0]
+            print(book)
+            book.status='未借出'
+            book.save()
+            print(book.status)
 
 
 @register_job(scheduler, 'interval', seconds=5)  # 86400
@@ -38,8 +39,8 @@ def test_job():
     time.sleep(4)
     # updateReservationRecord()
     check_mail()
-
-
+    
+    
 register_events(scheduler)
 
 
@@ -297,8 +298,9 @@ def Reservation(request):
             result = reservation.objects.filter(readerId=reader_obj, ISBN=booklist_obj).values('id')
             if len(result) == 0:
                 messages.success(request, "预约成功")
-                reservation.objects.create(readerId=reader_obj, ISBN=booklist_obj,
-                                           reserveLength=form.data['reserveLength'])
+
+                reservation.objects.create(readerId = reader_obj, ISBN = booklist_obj, reserveLength=form.data['reserveLength'],
+                                           status='书未入库')
                 return redirect('mainPage')
             messages.error(request, "该用户已经预约过该图书")
             return redirect('querybookinfo')
