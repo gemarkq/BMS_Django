@@ -25,7 +25,7 @@
 			  		<h5 class="card-title">在库数量</h5>
 			  	</div>
 			  	<div class="card-body">
-			    	<h3 class="card-title">100</h3>
+			    	<h3 class="card-title">{{ count.zaiku }}</h3>
 			  	</div>
 			</div>
 		</div>
@@ -38,7 +38,7 @@
 			  		<h5 class="card-title">借出数量</h5>
 			  	</div>
 			  	<div class="card-body">
-			    	<h3 class="card-title">0</h3>
+			    	<h3 class="card-title">{{ count.jiechu }}</h3>
 			  	</div>
 			</div>
 		</div>
@@ -51,7 +51,7 @@
 			  		<h5 class="card-title">预约</h5>
 			  	</div>
 			  	<div class="card-body">
-			    	<h3 class="card-title">0</h3>
+			    	<h3 class="card-title">{{ count.yuyue }}</h3>
 			  	</div>
 			</div>
 		</div>
@@ -62,35 +62,49 @@
 
 <div class="row">
 	<div class="col-md-5">
-		<h4>读者:</h4>
+		<h4> 读者:</h4>
 		<hr>
 		<div class="card card-body">
-			<a class="btn btn-primary  btn-sm btn-block" href="">注册读者</a>
+			<a class="btn btn-primary  btn-sm btn-block" href="{% url 'register' %}">注册读者</a>
 			<table class="table table-sm">
 				<tr>
-					<th></th>
+{#					<th></th>#}
 					<th>读者号ID</th>
-					<th>借阅记录</th>
+					<th>姓名</th>
+                    <th>Email</th>
 				</tr>
-
+                {% for reader in readers %}
+                    <tr>
+                        <td>{{ reader.readerId }}</td>
+                        <td>{{ reader.username }}</td>
+                        <td>{{ reader.email }}</td>
+                    </tr>
+                {% endfor %}
 			</table>
 		</div>
 	</div>
 
 	<div class="col-md-7">
-		<h4>最新借阅记录</h4>
+		<h4>最新借阅记录：</h4>
 		<hr>
 		<div class="card card-body">
-			<a class="btn btn-primary  btn-sm btn-block" href="">发起借书</a>
+			<a class="btn btn-primary  btn-sm btn-block" href="{% url 'querybookinfo' %}">发起借书</a>
 			<table class="table table-sm">
 				<tr>
-					<th>Product</th>
-					<th>Date Orderd</th>
-					<th>Status</th>
-					<th>Update</th>
-					<th>Remove</th>
+					<th>读者号ID</th>
+					<th>借阅日期</th>
+					<th>图书编号</th>
+					<th>状态</th>
+{#					<th>Remove</th>#}
 				</tr>
-
+                {% for borrow in borrows %}
+                    <tr>
+                        <td>{{ borrow.readerId_id }}</td>
+                        <td>{{ borrow.borrowTime }}</td>
+                        <td>{{ borrow.bookId_id }}</td>
+                        <td>{{ borrow.status }}</td>
+                    </tr>
+                {% endfor %}
 			</table>
 		</div>
 	</div>
