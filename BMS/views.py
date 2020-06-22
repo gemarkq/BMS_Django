@@ -22,14 +22,14 @@ scheduler.add_jobstore(DjangoJobStore(), 'default')
 def updateReservationRecord():
     print("scan DB && under updating:")
     wait_list = reservation.objects.raw('select id, ISBN_id, status from BMS_reservation '
-                                     'where DATEDIFF(CURDATE(), BMS_reservation.reserveTime)'
-                                     '>= BMS_reservation.reserveLength')
+                                        'where DATEDIFF(CURDATE(), BMS_reservation.reserveTime)'
+                                        '>= BMS_reservation.reserveLength')
     for item in wait_list:
         reservation.objects.filter(id=item.id).delete()
-        if item.status == '书已入库':#该状态时，books不会为空集，若为空集说明其他过程出错
+        if item.status == '书已入库':  # 该状态时，books不会为空集，若为空集说明其他过程出错
             book = books.objects.filter(ISBN=item.ISBN_id, status='已预约')[0]
             print(book)
-            book.status='未借出'
+            book.status = '未借出'
             book.save()
             print(book.status)
 
@@ -39,8 +39,8 @@ def test_job():
     time.sleep(4)
     # updateReservationRecord()
     check_mail()
-    
-    
+
+
 register_events(scheduler)
 
 
@@ -104,7 +104,7 @@ def registerPage(request):
             return redirect('register')
         readers.objects.get_or_create(readerId=reader_id, username=xm, password=pwdd, email=email,
                                       phoneNumber=phoneNumber)
-        messages.success(request,'注册成功')
+        messages.success(request, '注册成功')
         return redirect('mainPage')
     else:
         form = CreateUserForm()
@@ -189,18 +189,27 @@ def addBooks(request):
 def buildBooks(request):
     form = buildbookForm()
     if request.method == 'POST':
-
         form = buildbookForm(request.POST)
         print('form=', form)
         print('form.data=', form.data)
         if form.is_valid():
-            # form.save()
-            messages.success(request, "成功录入")
-            redirect('buildbook')
+            ISBN = form.data['ISBN']
+            book_name = form.data['bookName']
+            author = form.data['author']
+            publisher = form.data['publisher']
+            pub_date = request.POST.get('pub_date')
+            if pub_date:
+                booklist.objects.get_or_create(ISBN=ISBN, bookName=book_name, publisher=publisher, pub_date=pub_date,
+                                               author=author, count=0)
+                messages.success(request, "成功录入")
+                return  redirect('buildbook')
+            else:
+                messages.error(request, '请输入日期')
+                return redirect('buildbook')
         else:
             print('error=', form.errors)
-            messages.warning(request, "录入失败")
-            redirect('buildbook')
+            messages.error(request, "录入失败")
+            return  redirect('buildbook')
     context = {'form': form}
     return render(request, 'BMS/buildbook.html', context)
 
@@ -299,7 +308,8 @@ def Reservation(request):
             if len(result) == 0:
                 messages.success(request, "预约成功")
 
-                reservation.objects.create(readerId = reader_obj, ISBN = booklist_obj, reserveLength=form.data['reserveLength'],
+                reservation.objects.create(readerId=reader_obj, ISBN=booklist_obj,
+                                           reserveLength=form.data['reserveLength'],
                                            status='书未入库')
                 return redirect('mainPage')
             messages.error(request, "该用户已经预约过该图书")
