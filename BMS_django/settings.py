@@ -124,6 +124,13 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Email setting
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = '445454902@qq.com'
+EMAIL_HOST_PASSWORD = 'fjsyzayrihcpbgec'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_USE_SSL = True
 
 
 # Static files (CSS, JavaScript, Images)

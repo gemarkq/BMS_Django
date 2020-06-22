@@ -10,17 +10,18 @@ from .models import bms_admin, readers
 class CreateUserForm(UserCreationForm):
     readerId = forms.CharField(max_length=80, label='读者号')
     email = forms.EmailField(label="邮箱")
+    username = forms.CharField(max_length=150, label='姓名')
     password1 = forms.CharField(max_length=32, label="密码", widget=forms.PasswordInput)
     password2 = forms.CharField(max_length=32, label='再次输入密码', widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': u'与上面密码保持一致'}))
     phoneNumber = PhoneNumberField(label='手机')
 
-    class Meta:
-        model = readers
-        fields = ['username', 'email', 'readerId', 'password1', 'password2', 'phoneNumber']
-        labels = {
-            'username': '姓名'
-        }
+    # class Meta:
+    #     model = readers
+    #     fields = ['username', 'email', 'readerId', 'password1', 'password2', 'phoneNumber']
+    #     labels = {
+    #         'username': '姓名'
+    #     }
 
 
 class CreateAdminForm(forms.Form):
