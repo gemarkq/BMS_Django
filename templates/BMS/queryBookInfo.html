@@ -89,7 +89,7 @@
                                     {% endif %}
 									{% if book.count == count_borrow|get_item:book.ISBN|add_item:count_borrow2 %}
 									    <td><a class="btn btn-info"
-										    href="#"> 预约
+										    href="{% url 'reservation' %}?ISBN={{ book.ISBN }}"> 预约
                                         </a></td>
                                     {% else %}
                                         <td><a class="btn btn-default disabled"

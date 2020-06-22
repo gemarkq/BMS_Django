@@ -58,10 +58,16 @@ class borrow(models.Model):
     returnTime = models.DateField()
 
 class reservation(models.Model):
+    STATUS = (
+        ('书已入库', '书已入库'),
+        ('书未入库', '书未入库'),
+    )
+
     reserveTime = models.DateField(auto_now_add=True)
     reserveLength = models.IntegerField()
     ISBN = models.ForeignKey(booklist, on_delete=models.CASCADE, default='null')
     readerId = models.ForeignKey(readers, on_delete=models.CASCADE)
+    status = models.CharField(null=True, max_length=80, choices=STATUS)
     ##bookId = models.ForeignKey(books, on_delete=models.CASCADE)
 
 

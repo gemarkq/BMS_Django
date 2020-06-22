@@ -48,9 +48,10 @@ register_events(scheduler)
 
 @login_required(login_url='login')
 def mainPage(request):
+
     return render(request, 'BMS/mainpage.html')
 
-
+@login_required(login_url='login')
 def registerPage(request):
     form = CreateUserForm()
 
@@ -115,12 +116,12 @@ def loginPage(request):
     context = {'form': form}
     return render(request, 'BMS/Login.html', context)
 
-
+@login_required(login_url='login')
 def logoutUser(request):
     logout(request)
     return redirect('login')
 
-
+@login_required(login_url='login')
 def addBooks(request):
     form = addBooksForm()
     if request.method == 'POST':
@@ -138,7 +139,7 @@ def addBooks(request):
     context = {'form': form}
     return render(request, 'BMS/addBooks.html', context)
 
-
+@login_required(login_url='login')
 def buildBooks(request):
     form = buildbookForm()
     if request.method == 'POST':
@@ -177,7 +178,10 @@ def querybookinfo(request):
                     count_borrow[book.ISBN] = count_temp['ID__count']
                 if book.ISBN not in count_borrow2:
                     count_borrow2[book.ISBN] = count_temp2['ID__count']
-            context = {'books': books, 'count_borrow': count_borrow}
+            paginator = Paginator(books, 7)
+            page = request.GET.get('page')
+            books = paginator.get_page(page)
+            context = {'books': books, 'count_borrow': count_borrow, 'count_borrow2':count_borrow2}
             return render(request, 'BMS/queryBookInfo.html', context, )
         else:
             books = booklist.objects.filter(ISBN=condition)
@@ -191,7 +195,10 @@ def querybookinfo(request):
                     count_borrow[book.ISBN] = count_temp['ID__count']
                 if book.ISBN not in count_borrow2:
                     count_borrow2[book.ISBN] = count_temp2['ID__count']
-            context = {'books': books, 'count_borrow': count_borrow}
+            paginator = Paginator(books, 7)
+            page = request.GET.get('page')
+            books = paginator.get_page(page)
+            context = {'books': books, 'count_borrow': count_borrow, 'count_borrow2':count_borrow2}
             return render(request, 'BMS/queryBookInfo.html', context, )
 
     books = booklist.objects.all()
@@ -223,6 +230,9 @@ def querybooks(request):
 
 def Reservation(request):
     form = reservationForm()
+    ISBN_ID = request.GET.get('ISBN')
+    ISBN_id = {}
+    ISBN_id['id'] = ISBN_ID
     if request.method == 'POST':
         postcontent = request.POST.copy()
         print('post=', postcontent)
@@ -232,23 +242,23 @@ def Reservation(request):
 
         print('form=',form.data)
         print('length=',form.data['reserveLength'])
-        print('isbn=', form.data['ISBN_id'])
+        # print('isbn=', form.data['ISBN_id'])
         print('readerId=',form.data['readerId_id'])
         print(form.is_valid())
         if len(userlist) > 0:
             reader_obj = readers.objects.get(readerId=form.data['readerId_id'])
-            booklist_obj =  booklist.objects.get(ISBN=form.data['ISBN_id'])
+            booklist_obj =  booklist.objects.get(ISBN=ISBN_ID)
             result = reservation.objects.filter(readerId = reader_obj, ISBN = booklist_obj).values('id')
             if len(result) == 0:
                 messages.success(request, "预约成功")
                 reservation.objects.create(readerId = reader_obj, ISBN = booklist_obj, reserveLength=form.data['reserveLength'])
-                return redirect('reservation')
+                return redirect('mainPage')
             messages.error(request, "该用户已经预约过该图书")
-            return redirect('reservation')
+            return redirect('querybookinfo')
         else:
             messages.error(request, "该用户不存在，请重新输入")
-            return redirect('reservation')
-    context = {'form': form}
+            return HttpResponseRedirect("/reservation/?ISBN="+ISBN_ID)
+    context = {'form': form, 'isbn':ISBN_id}
     return render(request, 'BMS/reservation.html', context)
 
 def reservationRecord(request):
@@ -341,4 +351,32 @@ def borrowbook(request):
 
 
 def borrowRecord(request):
-    return render(request, 'BMS/borrowRecord.html')
+    if request.method == 'POST':
+        sec = request.POST.get('serc')
+        condition = request.POST.get('condition')
+        if sec == 'book':
+            borrow_record = borrow.objects.filter(bookId=condition)
+        else:
+            borrow_record = borrow.objects.filter(readerId=condition)
+        paginator = Paginator(borrow_record, 7)
+        page = request.GET.get('page')
+        borrow_record = paginator.get_page(page)
+        context = {'borrows':borrow_record}
+        return render(request, 'BMS/borrowRecord.html', context)
+    else:
+        borrow_record = borrow.objects.all()
+        paginator = Paginator(borrow_record, 7)
+        page = request.GET.get('page')
+        borrow_record = paginator.get_page(page)
+        context = {'borrows':borrow_record}
+        return render(request, 'BMS/borrowRecord.html', context)
+
+def returnBook(request):
+    if request.method == 'POST':
+        borrow_id = request.GET.get('ID')
+        pass
+
+    borrow_id = request.GET.get('ID')
+    borrow_record = borrow.objects.get(id=borrow_id)
+    context = {'borrow':borrow_record}
+    return render(request, 'BMS/return.html',context)

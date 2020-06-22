@@ -89,8 +89,8 @@ class reservationForm(forms.ModelForm):
     reserveTime = forms.DateField(label=u'预约日期')
     reserveLength = forms.IntegerField(label=u'reserveLength', min_value=0, max_value=10, initial=10,
                                        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入读者id号'}))
-    ISBN_id = forms.ModelChoiceField(label=u'ISBN', queryset=booklist.objects.all(),
-                                  widget=forms.Select(attrs={"class": "form-control", 'placeholder': u'请选择ISBN号'}))
+    # ISBN_id = forms.ModelChoiceField(label=u'ISBN', queryset=booklist.objects.all(),
+    #                               widget=forms.Select(attrs={"class": "form-control", 'placeholder': u'请选择ISBN号'}))
     readerId_id = forms.CharField(label=u'ReaderId', max_length=80, min_length=0, error_messages={'required': u'读者id号不能为空'},
                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入读者id号'}))
     class Meta:
