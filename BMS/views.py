@@ -372,9 +372,12 @@ def borrowRecord(request):
         return render(request, 'BMS/borrowRecord.html', context)
 
 def returnBook(request):
+    borrow_id = request.GET.get('ID')
+    borrow_record = borrow.objects.get(id=borrow_id)
     if request.method == 'POST':
-        borrow_id = request.GET.get('ID')
         pass
+
+
 
     borrow_id = request.GET.get('ID')
     borrow_record = borrow.objects.get(id=borrow_id)
