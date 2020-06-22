@@ -31,7 +31,7 @@ def updateReservationRecord():
             print(book.status)
 
 
-@register_job(scheduler, 'interval', seconds=5)#86400
+@register_job(scheduler, 'interval', seconds=86400)#86400
 def test_job():
     time.sleep(4)
     updateReservationRecord()
@@ -39,9 +39,9 @@ def test_job():
 
 
 
-register_events(scheduler)
-scheduler.start()
-print('Scheduler started!')
+#register_events(scheduler)
+#scheduler.start()
+#print('Scheduler started!')
 
 
 
