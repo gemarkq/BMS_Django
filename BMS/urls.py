@@ -20,5 +20,6 @@ urlpatterns = [
     path('reservation/', views.Reservation, name='reservation'),
     path('querybookinfo/', views.querybookinfo, name='querybookinfo'),
     path('reservationRecord/', views.reservationRecord, name='reservationRecord'),
-    path('returnBook/', views.returnBook, name='returnBook')
+    path('returnBook/', views.returnBook, name='returnBook'),
+    path('check_mail/', views.returnBook, name='check_mail')
 ]

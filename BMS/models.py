@@ -15,8 +15,7 @@ class readers(models.Model):
     phoneNumber = PhoneNumberField(null=True)
     email = models.EmailField(null=True, unique=True)
     balance = models.DecimalField(max_digits=8, decimal_places=3, default=100.000)
-    password = models.CharField(max_length=32, null=True)
-    USERNAME_FIELD = 'username'
+    password = models.CharField(max_length=256, null=True)
 
 class booklist(models.Model):
     ISBN = models.CharField(primary_key=True, null=False, max_length=80)
