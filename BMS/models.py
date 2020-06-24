@@ -16,6 +16,7 @@ class readers(models.Model):
     email = models.EmailField(null=True, unique=True)
     balance = models.DecimalField(max_digits=8, decimal_places=3, default=100.000)
     password = models.CharField(max_length=32, null=True)
+    USERNAME_FIELD = 'username'
 
 class booklist(models.Model):
     ISBN = models.CharField(primary_key=True, null=False, max_length=80)
@@ -62,13 +63,13 @@ class reservation(models.Model):
         ('书已入库', '书已入库'),
         ('书未入库', '书未入库'),
     )
-
     reserveTime = models.DateField(auto_now_add=True)
     reserveLength = models.IntegerField()
     ISBN = models.ForeignKey(booklist, on_delete=models.CASCADE, default='null')
     readerId = models.ForeignKey(readers, on_delete=models.CASCADE)
     status = models.CharField(null=True, max_length=80, choices=STATUS)
-    ##bookId = models.ForeignKey(books, on_delete=models.CASCADE)
+    class Meta:
+        unique_together =('readerId','ISBN')
 
 
 

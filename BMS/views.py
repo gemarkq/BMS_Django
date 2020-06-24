@@ -11,8 +11,9 @@ from django.db.models import Count
 from django.core.paginator import Paginator
 import datetime, timedelta, time
 from apscheduler.schedulers.background import BackgroundScheduler
+from urllib.request import Request, urlopen
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
-
+import requests,json
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), 'default')
 
@@ -51,7 +52,7 @@ def mainPage(request):
 
     return render(request, 'BMS/mainpage.html')
 
-@login_required(login_url='login')
+#@login_required(login_url='login')
 def registerPage(request):
     form = CreateUserForm()
 
@@ -142,18 +143,40 @@ def addBooks(request):
 @login_required(login_url='login')
 def buildBooks(request):
     form = buildbookForm()
+    #r = requests.get('https://api.douban.com/v2/book/isbn/:9787111128069?apikey=0b2bdeda43b5688921839c8ecb20399b',{'User-Agent': ua.chrome})
+    #print("调用接口",r,r.text)
     if request.method == 'POST':
-
         form = buildbookForm(request.POST)
         print('form=', form)
         print('form.data=',form.data)
+        isbn = form.data['ISBN']
+        url = 'https://api.douban.com/v2/book/isbn/' + isbn + '?apikey=0b2bdeda43b5688921839c8ecb20399b'
+        firefox_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
+        is_exist = True
+        try:
+            info = Request(url, headers=firefox_headers)
+            html = urlopen(info)
+            # 获取数据
+            # data = html.read()
+            # print('data',data)
+            # 转换成JSON
+            # data_json = json.loads(data)
+            # print('data_json',data_json,len(data_json))
+        except:
+            is_exist = False
         if form.is_valid():
-            #form.save()
-            messages.success(request, "成功录入")
-            redirect('buildbook')
+            if is_exist:
+                #form.save()
+                messages.success(request, "成功录入")
+                redirect('buildbook')
+            else:
+                print('error1=', form.errors)
+                messages.error(request, "ISBN号不存在")
+                print('!!')
+                redirect('BMS/buildbook.html')
         else:
-            print('error=', form.errors)
-            messages.warning(request, "录入失败")
+            print('error2=', form.errors)
+            messages.error(request, "录入失败")
             redirect('buildbook')
     context = {'form': form}
     return render(request, 'BMS/buildbook.html', context)

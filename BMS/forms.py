@@ -9,12 +9,13 @@ from .models import bms_admin, readers
 
 class CreateUserForm(UserCreationForm):
     readerId = forms.CharField(max_length=80, label='读者号')
+    username = forms.CharField(max_length=40)
     email = forms.EmailField(label="邮箱")
     password1 = forms.CharField(max_length=32, label="密码", widget=forms.PasswordInput)
     password2 = forms.CharField(max_length=32, label='再次输入密码', widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': u'与上面密码保持一致'}))
     phoneNumber = PhoneNumberField(label='手机')
-
+    #USERNAME_FIELD = 'username'
     class Meta:
         model = readers
         fields = ['username', 'email', 'readerId', 'password1', 'password2', 'phoneNumber']
@@ -48,7 +49,6 @@ class buildbookForm(forms.ModelForm):
                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入书名'}))
     author = forms.CharField(label=u'作者', max_length=80, error_messages={'required': u'作者不能为空'},
                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入作者'}))
-
     class Meta:
         model = booklist
         fields = ['ISBN', 'bookName', 'author']

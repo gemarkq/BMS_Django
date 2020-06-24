@@ -19,7 +19,7 @@
 </head>
 
 {% include 'BMS/navbar.html' %}
-    {% if messages %}
+       {% if messages %}
         {% for message in messages %}
             {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
                 <div class="alert alert-success">
@@ -31,15 +31,14 @@
                     <strong id =messages>{{ message }}!</strong>
                 </div>
             {% endif %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                <div class="alert alert-danger">
+                    <strong id =messages>{{ message }}!</strong>
+                </div>
+            {% endif %}
         {% endfor %}
-
-<!--            {% for field in form %}-->
-<!--    			<div class="fieldWrapper">-->
-<!--        		    {{field.errors}}1{{field.label_tag}}-->
-<!--&lt;!&ndash;        		{{ field.label_tag }} {{ field }}&ndash;&gt;-->
-<!--    			</div>-->
-<!--	        {% endfor %}-->
     {% endif %}
+
 
 <div class="container">
 
@@ -49,16 +48,14 @@
             <form action="#" method="post">{% csrf_token %}
                 <h6>ISBN</h6>
                 {{ form.ISBN }}
-                <!--<input type="text" name="ISBN" id="ISBN" class="form-control" ></input>-->
+<!--                <input type="text" name="ISBN" id="ISBN" class="form-control" ></input>-->
                 <h6>书名</h6>
                 {{ form.bookName }}
-                <!--<input type="text" name="bookName" id="bookName" class="form-control" ></input>-->
+<!--                <input type="text" name="bookName" id="bookName" class="form-control" ></input>-->
                 <h6>作者</h6>
                 {{ form.author }}
-                <!--<input type="text" name="author" id="author" class="form-control" ></input>-->
+<!--                <input type="text" name="author" id="author" class="form-control" ></input>-->
                 <input type="submit" value="添加" class="btn btn-primary btn-wide login-btn" style="margin-top:2rem"/>
-
-
             </form>
 
         </div>
