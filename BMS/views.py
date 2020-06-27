@@ -11,21 +11,33 @@ from django.db.models import Count, Q
 from django.core.paginator import Paginator
 import datetime, timedelta, time
 from apscheduler.schedulers.background import BackgroundScheduler
+from urllib.request import Request, urlopen
 from django.core.mail import send_mail
 from BMS_django import settings
 from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
-
+import requests,json
 scheduler = BackgroundScheduler()
 scheduler.add_jobstore(DjangoJobStore(), 'default')
 
 
 def updateReservationRecord():
     print("scan DB && under updating:")
-    wait_list = reservation.objects.raw('select id, ISBN_id, status from BMS_reservation '
+    wait_list = reservation.objects.raw('select id, ISBN_id, status, readerId_id from BMS_reservation '
                                         'where DATEDIFF(CURDATE(), BMS_reservation.reserveTime)'
                                         '>= BMS_reservation.reserveLength')
     for item in wait_list:
-        reservation.objects.filter(id=item.id).delete()
+        reservationObj = reservation.objects.get(id=item.id)
+        readerObj = readers.objects.get(readerId=reservationObj.readerId_id)
+        reservationObj.delete()
+        print('email=',readerObj.email)
+        msg = '您的预约已过期，请确认后尽快重新预约！'
+        send_mail(
+            subject='预约逾期提醒',
+            message=msg,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[readerObj.email, ]
+        )
+        print("还书")
         if item.status == '书已入库':  # 该状态时，books不会为空集，若为空集说明其他过程出错
             book = books.objects.filter(ISBN=item.ISBN_id, status='已预约')[0]
             print(book)
@@ -34,18 +46,18 @@ def updateReservationRecord():
             print(book.status)
 
 
-@register_job(scheduler, 'interval', seconds=5)  # 86400
+@register_job(scheduler, 'interval', seconds=86400)  # 86400
 def test_job():
     time.sleep(4)
-    # updateReservationRecord()
+    updateReservationRecord()
     check_mail()
 
 
 register_events(scheduler)
 
 
-# scheduler.start()
-# print('Scheduler started!')
+scheduler.start()
+print('Scheduler started!')
 
 def check_mail():
     # now_time = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -188,28 +200,48 @@ def addBooks(request):
 @login_required(login_url='login')
 def buildBooks(request):
     form = buildbookForm()
+    #r = requests.get('https://api.douban.com/v2/book/isbn/:9787111128069?apikey=0b2bdeda43b5688921839c8ecb20399b',{'User-Agent': ua.chrome})
+    #print("调用接口",r,r.text)
     if request.method == 'POST':
         form = buildbookForm(request.POST)
         print('form=', form)
-        print('form.data=', form.data)
+
+        print('form.data=',form.data)
+        isbn = ""
+        mystring = form.data['ISBN']
+        for item in mystring:
+            if '9' >= item >= '0':
+                isbn += item
+        url = 'https://api.douban.com/v2/book/isbn/' + isbn + '?apikey=0b2bdeda43b5688921839c8ecb20399b'
+        firefox_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
+        is_exist = True
+        try:
+            info = Request(url, headers=firefox_headers)
+            html = urlopen(info)
+            # 获取数据
+            # data = html.read()
+            # print('data',data)
+            # 转换成JSON
+            # data_json = json.loads(data)
+            # print('data_json',data_json,len(data_json))
+        except:
+            is_exist = False
         if form.is_valid():
-            ISBN = form.data['ISBN']
-            book_name = form.data['bookName']
-            author = form.data['author']
-            publisher = form.data['publisher']
-            pub_date = request.POST.get('pub_date')
-            if pub_date:
-                booklist.objects.get_or_create(ISBN=ISBN, bookName=book_name, publisher=publisher, pub_date=pub_date,
-                                               author=author, count=0)
+            if is_exist:
+                form.save()
                 messages.success(request, "成功录入")
-                return  redirect('buildbook')
+                redirect('buildbook')
             else:
-                messages.error(request, '请输入日期')
-                return redirect('buildbook')
+                print('error1=', form.errors)
+                messages.error(request, "ISBN号不存在")
+                print('!!')
+                redirect('BMS/buildbook.html')
         else:
-            print('error=', form.errors)
-            messages.error(request, "录入失败")
-            return  redirect('buildbook')
+            print('error2=', form.errors)
+            messages.error(request, "录入失败,ISBN号已经存在")
+            redirect('buildbook')
+        print('form.data=', form.data)
+
     context = {'form': form}
     return render(request, 'BMS/buildbook.html', context)
 

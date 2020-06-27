@@ -15,13 +15,17 @@ class CreateUserForm(UserCreationForm):
     password2 = forms.CharField(max_length=32, label='再次输入密码', widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': u'与上面密码保持一致'}))
     phoneNumber = PhoneNumberField(label='手机')
+    #USERNAME_FIELD = 'username'
+    class Meta:
+        model = readers
+        fields = ['username', 'email', 'readerId', 'password1', 'password2', 'phoneNumber']
+        labels = {
+            'username': '姓名'
+        }
 
-    # class Meta:
-    #     model = readers
-    #     fields = ['username', 'email', 'readerId', 'password1', 'password2', 'phoneNumber']
-    #     labels = {
-    #         'username': '姓名'
-    #     }
+
+
+
 
 
 class CreateAdminForm(forms.Form):
@@ -66,6 +70,12 @@ class addBooksForm(forms.ModelForm):
         ('图书流通室', '图书流通室'),
         ('图书阅览室', '图书阅览室'),
     )
+    STATUS = (
+        ('已预约', '已预约'),
+        ('未借出', '未借出'),
+        ('不外借', '不外借'),
+        ('已借出', '已借出'),
+    )
     ID = forms.CharField(label=u'ISBN', max_length=80, error_messages={'required': u'图书ID号不能为空'},
                          widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入图书ID号'}),
                          )
@@ -73,8 +83,9 @@ class addBooksForm(forms.ModelForm):
                                widget=forms.Select(attrs={'class': 'form-control'},
                                    choices=POSITIONS),
                                )
-    status = forms.ChoiceField(label=u'状态', error_messages={'required': u'状态不能为空'},
-                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入状态'}),
+    status = forms.CharField(label=u'状态', max_length=80, error_messages={'required': u'书名不能为空'},
+                               widget=forms.Select(attrs={'class': 'form-control'},
+                                   choices=STATUS),
                                )
     ISBN = forms.ModelChoiceField(label=u'ISBN_id', queryset=booklist.objects.all(),
                                   widget=forms.Select(attrs={"class": "form-control", 'placeholder': u'请选择ISBN号'}))
@@ -105,8 +116,8 @@ class reservationForm(forms.ModelForm):
     reserveLength = forms.IntegerField(label=u'reserveLength', min_value=0, max_value=10, initial=10,
                                        widget=forms.TextInput(
                                            attrs={'class': 'form-control', 'placeholder': u'请输入读者id号'}))
-    # ISBN_id = forms.ModelChoiceField(label=u'ISBN', queryset=booklist.objects.all(),
-    #                               widget=forms.Select(attrs={"class": "form-control", 'placeholder': u'请选择ISBN号'}))
+    ISBN_id = forms.ModelChoiceField(label=u'ISBN', queryset=booklist.objects.all(),
+                                   widget=forms.Select(attrs={"class": "form-control", 'placeholder': u'请选择ISBN号'}))
     readerId_id = forms.CharField(label=u'ReaderId', max_length=80, min_length=0,
                                   error_messages={'required': u'读者id号不能为空'},
                                   widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': u'请输入读者id号'}))
