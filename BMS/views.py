@@ -22,11 +22,22 @@ scheduler.add_jobstore(DjangoJobStore(), 'default')
 
 def updateReservationRecord():
     print("scan DB && under updating:")
-    wait_list = reservation.objects.raw('select id, ISBN_id, status from BMS_reservation '
+    wait_list = reservation.objects.raw('select id, ISBN_id, status, readerId_id from BMS_reservation '
                                         'where DATEDIFF(CURDATE(), BMS_reservation.reserveTime)'
                                         '>= BMS_reservation.reserveLength')
     for item in wait_list:
-        reservation.objects.filter(id=item.id).delete()
+        reservationObj = reservation.objects.get(id=item.id)
+        readerObj = readers.objects.get(readerId=reservationObj.readerId_id)
+        reservationObj.delete()
+        print('email=',readerObj.email)
+        msg = '您的预约已过期，请确认后尽快重新预约！'
+        send_mail(
+            subject='预约逾期提醒',
+            message=msg,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[readerObj.email, ]
+        )
+        print("还书")
         if item.status == '书已入库':  # 该状态时，books不会为空集，若为空集说明其他过程出错
             book = books.objects.filter(ISBN=item.ISBN_id, status='已预约')[0]
             print(book)
@@ -35,18 +46,18 @@ def updateReservationRecord():
             print(book.status)
 
 
-@register_job(scheduler, 'interval', seconds=5)  # 86400
+@register_job(scheduler, 'interval', seconds=86400)  # 86400
 def test_job():
     time.sleep(4)
-    # updateReservationRecord()
+    updateReservationRecord()
     check_mail()
 
 
 register_events(scheduler)
 
 
-# scheduler.start()
-# print('Scheduler started!')
+scheduler.start()
+print('Scheduler started!')
 
 def check_mail():
     # now_time = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -86,7 +97,7 @@ def mainPage(request):
     return render(request, 'BMS/mainpage.html', context)
 
 
-#@login_required(login_url='login')
+@login_required(login_url='login')
 def registerPage(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
@@ -196,7 +207,11 @@ def buildBooks(request):
         print('form=', form)
 
         print('form.data=',form.data)
-        isbn = form.data['ISBN']
+        isbn = ""
+        mystring = form.data['ISBN']
+        for item in mystring:
+            if '9' >= item >= '0':
+                isbn += item
         url = 'https://api.douban.com/v2/book/isbn/' + isbn + '?apikey=0b2bdeda43b5688921839c8ecb20399b'
         firefox_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
         is_exist = True
@@ -213,7 +228,7 @@ def buildBooks(request):
             is_exist = False
         if form.is_valid():
             if is_exist:
-                #form.save()
+                form.save()
                 messages.success(request, "成功录入")
                 redirect('buildbook')
             else:
@@ -223,27 +238,9 @@ def buildBooks(request):
                 redirect('BMS/buildbook.html')
         else:
             print('error2=', form.errors)
-            messages.error(request, "录入失败")
+            messages.error(request, "录入失败,ISBN号已经存在")
             redirect('buildbook')
         print('form.data=', form.data)
-        if form.is_valid():
-            ISBN = form.data['ISBN']
-            book_name = form.data['bookName']
-            author = form.data['author']
-            publisher = form.data['publisher']
-            pub_date = request.POST.get('pub_date')
-            if pub_date:
-                booklist.objects.get_or_create(ISBN=ISBN, bookName=book_name, publisher=publisher, pub_date=pub_date,
-                                               author=author, count=0)
-                messages.success(request, "成功录入")
-                return  redirect('buildbook')
-            else:
-                messages.error(request, '请输入日期')
-                return redirect('buildbook')
-        else:
-            print('error=', form.errors)
-            messages.error(request, "录入失败")
-            return  redirect('buildbook')
 
     context = {'form': form}
     return render(request, 'BMS/buildbook.html', context)

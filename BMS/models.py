@@ -16,6 +16,7 @@ class readers(models.Model):
     email = models.EmailField(null=True, unique=True)
     balance = models.DecimalField(max_digits=8, decimal_places=3, default=100.000)
     password = models.CharField(max_length=256, null=True)
+    USERNAME_FIELD = 'username'
 
 class booklist(models.Model):
     ISBN = models.CharField(primary_key=True, null=False, max_length=80)
@@ -42,7 +43,7 @@ class books(models.Model):
 
     ID = models.CharField(primary_key=True, null=False, max_length=80)
     position = models.CharField(null=True, max_length=80, choices=POSITIONS)
-    status = models.CharField(default='架上', choices=STATUS, max_length=80)
+    status = models.CharField(default='未借出', choices=STATUS, max_length=80)
     ISBN = models.ForeignKey(booklist, on_delete=models.CASCADE)
 
 class borrow(models.Model):
